@@ -1,6 +1,6 @@
 import 'package:petitparser_extras/src/ast/index.dart';
 
-abstract class Printer<ContextType extends PrintContext> extends AstVisitor<void, ContextType> {
+abstract class PrinterBase<ContextType extends PrintContext> extends AstVisitor<void, ContextType> {
   
 
 
@@ -27,13 +27,13 @@ abstract class Printer<ContextType extends PrintContext> extends AstVisitor<void
       context._indent();
     }
 
-    for(var index=0; index< length; index++) {
+    for(var index=0; index < length; index++) {
 
       if(style?.indent ?? false) {
         context._writeIndentation();
       }
 
-      print_item(list[index], null, context);
+      print_item(list[index], style?.itemStyle, context);
 
       if(style?.separator != null && index != last) {
         context._write(style.separator);
@@ -117,6 +117,7 @@ class PrintListStyle {
   final String before;
   final String after;
   final bool indent;
+  final PrintItemStyle itemStyle;
 
   PrintListStyle({
     this.separator = "",
@@ -124,6 +125,7 @@ class PrintListStyle {
     this.after = "",
     this.before = "",
     this.indent = false,
+    this.itemStyle,
   });
 
 

@@ -3,7 +3,7 @@
 
 import 'package:petitparser_extras/src/ast/index.dart';
 
-class GraphQLPrinter extends Printer<GraphQLPrinterContext> {
+class GraphQLPrinter extends PrinterBase<GraphQLPrinterContext> {
 
 
   void visitCompilationUnit(CompilationUnit compilationUnit, GraphQLPrinterContext context) {
@@ -15,18 +15,10 @@ class GraphQLPrinter extends Printer<GraphQLPrinterContext> {
     print_item(argumentNode.value, context.ArgumentValueStyle, context);
   }
 
-  void visitDirectiveNode(DirectiveNode directiveNode, GraphQLPrinterContext context) {
-    
-  }
-
   void visitFieldNode(FieldNode fieldNode, GraphQLPrinterContext context) {
     print_item(fieldNode.name, null, context);
     print_list(fieldNode.arguments, context.FieldArgumentsStyle, context);
     print_list(fieldNode.fields, context.FieldsStyle, context);
-  }
-
-  void visitNameNode(NameNode nameNode, GraphQLPrinterContext  context) {
-    
   }
 
   void visitExpressionNode(ExpressionNode valueNode, GraphQLPrinterContext  context) {
