@@ -5,10 +5,22 @@ abstract class PrinterBase<ContextType extends PrintContext> extends AstVisitor<
 
 
   void print_item(Object item, PrintItemStyle style, ContextType context) {
+    if(item == null) {
+      return;
+    }
+
+    if(style?.before != null) {
+      context._write(style.before);
+    }
+
     if(item is AstNode) {
       item.visit(this, context);
     } else {
       context._write(item);
+    }
+
+    if(style?.after != null) {
+      context._write(style.after);
     }
   }
   
@@ -17,6 +29,11 @@ abstract class PrinterBase<ContextType extends PrintContext> extends AstVisitor<
       return;
     }
     var length = list?.length ?? 0;
+
+    if(length == 0 && (!(style?.printIfEmpty) ?? false)) {
+      return;
+    }
+
     var last = length - 1;
 
     if(style?.before != null) {
@@ -44,22 +61,29 @@ abstract class PrinterBase<ContextType extends PrintContext> extends AstVisitor<
       }
     }
 
+
     if(style?.indent ?? false) {
       context._unindent();
     }
 
     if(style?.after != null) {
+      if(style?.indent ?? false) {
+        context._writeIndentation();
+      }
       context._write(style.after);
+
     }
+
+
   }
 
-  String print(AstNode value) {
-    PrintContext context = createContext();
+  String print(AstNode value, [bool indentation = true]) {
+    PrintContext context = createContext(indentation);
     value?.visit(this, context);
     return context.toString();
   }
 
-  ContextType createContext();
+  ContextType createContext(bool indentation);
 
 
 }
@@ -69,6 +93,11 @@ class PrintContext {
   final PrintItemStyle SpaceBeforeStyle = PrintItemStyle(
       printIfNull: false,
       before: " "
+  );
+
+  final PrintItemStyle SpaceAfterStyle = PrintItemStyle(
+      printIfNull: false,
+      after: " "
   );
 
   final StringBuffer buffer = StringBuffer();
@@ -87,11 +116,11 @@ class PrintContext {
     buffer.write("\t" * _currentIndent);
   }
 
-  void _write([value]) {
+  void _write([value = ""]) {
     buffer.write(value);
   }
 
-  void _writeln([value]) {
+  void _writeln([value = ""]) {
     buffer.writeln(value);
   }
 
@@ -103,10 +132,12 @@ class PrintContext {
 
 class PrintItemStyle {
   final String before;
+  final String after;
   final bool printIfNull;
 
   PrintItemStyle({
     this.before = "",
+    this.after = "",
     this.printIfNull = true
   });
 }
@@ -118,6 +149,7 @@ class PrintListStyle {
   final String after;
   final bool indent;
   final PrintItemStyle itemStyle;
+  final bool printIfEmpty;
 
   PrintListStyle({
     this.separator = "",
@@ -126,6 +158,7 @@ class PrintListStyle {
     this.before = "",
     this.indent = false,
     this.itemStyle,
+    this.printIfEmpty = false
   });
 
 

@@ -26,7 +26,7 @@ void main() {
     if (value is AstNode) {
       var printer = GraphQLPrinter();
 
-      print("result: ${printer.print(value)}");
+      print("result:\n${printer.print(value)}");
     }
   });
 }
