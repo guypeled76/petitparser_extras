@@ -7,15 +7,12 @@ class GraphQLPrinter extends Printer<GraphQLPrinterContext> {
 
 
   void visitCompilationUnit(CompilationUnit compilationUnit, GraphQLPrinterContext context) {
-    this.printItems(compilationUnit.children, context, separator: "", newline: true);
+    print_list(compilationUnit.children, context.OperationsStyle, context);
   }
 
   void visitArgumentNode(ArgumentNode argumentNode, GraphQLPrinterContext context) {
-    this.printItem(argumentNode.name);
-    if(argumentNode.value != null) {
-      this.printItem(":");
-      argumentNode.value.print(this, context);
-    }
+    print_item(argumentNode.name, null, context);
+    print_item(argumentNode.value, context.ArgumentValueStyle, context);
   }
 
   void visitDirectiveNode(DirectiveNode directiveNode, GraphQLPrinterContext context) {
@@ -23,10 +20,9 @@ class GraphQLPrinter extends Printer<GraphQLPrinterContext> {
   }
 
   void visitFieldNode(FieldNode fieldNode, GraphQLPrinterContext context) {
-    this.printIndent();
-    this.printItem(fieldNode.name);
-    this.printItems(fieldNode.arguments, context, separator: ",", newline: false, prefix: "(", suffix: ")", empty: false);
-    this.printItems(fieldNode.fields, context, newline: true, prefix: "{", suffix: "}", empty: false, indent: true, spaceBefore: true);
+    print_item(fieldNode.name, null, context);
+    print_list(fieldNode.arguments, context.FieldArgumentsStyle, context);
+    print_list(fieldNode.fields, context.FieldsStyle, context);
   }
 
   void visitNameNode(NameNode nameNode, GraphQLPrinterContext  context) {
@@ -34,25 +30,52 @@ class GraphQLPrinter extends Printer<GraphQLPrinterContext> {
   }
 
   void visitExpressionNode(ExpressionNode valueNode, GraphQLPrinterContext  context) {
-    this.printItem(valueNode.toString());
+    this.print_item(valueNode.toString(), null, context);
   }
 
   void visitOperationNode(OperationNode operationNode, GraphQLPrinterContext context) {
-    this.printItem(operationNode.typeName, spaceAfter: true);
-    this.indent();
-    this.printItems(operationNode.fields, context, separator: "", newline: true, prefix: "{", suffix: "}");
-    this.unindent();
+    this.print_item(operationNode.typeName, null, context);
+    this.print_list(operationNode.fields, context.FieldsStyle, context);
   }
 
   void visitVariableNode(VariableNode variableNode, GraphQLPrinterContext context) {
-    this.printItem("\$${variableNode.name}");
+    this.print_item("\$${variableNode.name}", null, context);
   }
 
   void visitPrimitiveNode(PrimitiveNode primitiveNode, GraphQLPrinterContext context) {
-    this.printItem(primitiveNode.toString());
+    this.print_item(primitiveNode.toString(), null, context);
   }
+
+  @override
+  GraphQLPrinterContext createContext() {
+    return GraphQLPrinterContext();
+  }
+
+
 }
 
-class GraphQLPrinterContext  {
+class GraphQLPrinterContext extends PrintContext {
+
+  final PrintListStyle OperationsStyle = PrintListStyle(
+      newline: true
+  );
+
+  final PrintListStyle FieldsStyle = PrintListStyle(
+      newline: true,
+      before: "{\n",
+      after: "\n}",
+      indent: true
+  );
+
+  final PrintListStyle FieldArgumentsStyle = PrintListStyle(
+      separator: ",",
+      before: "(",
+      after: ")"
+  );
+
+  final PrintItemStyle ArgumentValueStyle = PrintItemStyle(
+      printIfNull: false,
+      before: ":"
+  );
 
 }

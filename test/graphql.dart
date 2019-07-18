@@ -25,8 +25,8 @@ void main() {
     var value = test1.value;
     if (value is AstNode) {
       var printer = GraphQLPrinter();
-      value.print(printer, null);
-      print("result: ${printer.toString()}");
+
+      print("result: ${printer.print(value)}");
     }
   });
 }

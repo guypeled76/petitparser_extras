@@ -12,4 +12,4 @@ export 'name.dart';
 export 'argument.dart';
 export 'primitive.dart';
 export 'visitor.dart';
-export 'printer.dart';
+export 'package:petitparser_extras/src/printers/printer.dart';
