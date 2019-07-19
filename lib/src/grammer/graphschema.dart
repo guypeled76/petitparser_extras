@@ -11,7 +11,17 @@ class GraphSchemaGrammarDefinition extends GraphQLBaseDefinition {
 
   @override
   Parser start() {
-    return ref(typeSystemDefinition).end();
+    return ref(document).end();
+  }
+
+  Parser document() {
+    return ref(definition).plus();
+  }
+
+  Parser definition() {
+    //ref(operationDefinition) |
+    //ref(fragmentDefinition) |
+    return ref(typeSystemDefinition);
   }
 
   Parser typeSystemDefinition() {

@@ -106,6 +106,8 @@ abstract class GrammarBaseDefinition extends GrammarDefinition {
 
   Parser COLON() => ref(token, ":");
 
+  Parser SEMI_COLON() => ref(token, ";");
+
   Parser QUERY() => ref(token, "query");
 
   Parser MUTATION() => ref(token, "mutation");
@@ -127,6 +129,10 @@ abstract class GrammarBaseDefinition extends GrammarDefinition {
   Parser EQUAL() => ref(token, "=");
 
   Parser EXCLAMATION() => ref(token, "!");
+
+  Parser QUESTION_MARK() => ref(token, "?");
+
+  Parser STAR() => ref(token, "*");
 
 
   Parser token(Object source, [String name]) {
