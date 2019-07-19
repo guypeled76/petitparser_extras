@@ -74,6 +74,8 @@ abstract class GrammarBaseDefinition extends GrammarDefinition {
   }
 
 
+  Parser NULL() => ref(token, "null");
+
   Parser MULTIPLY() => ref(token, "*");
 
   Parser DIVIDE() => ref(token, "/");
@@ -85,6 +87,10 @@ abstract class GrammarBaseDefinition extends GrammarDefinition {
   Parser BACKSLASH() => ref(token, "\\");
 
   Parser OPEN_BRACE() => ref(token, "{");
+
+  Parser PIPE() => ref(token, "|");
+
+  Parser AMP() => ref(token, "&");
 
   Parser CLOSE_BRACE() => ref(token, "}");
 
@@ -121,6 +127,7 @@ abstract class GrammarBaseDefinition extends GrammarDefinition {
   Parser EQUAL() => ref(token, "=");
 
   Parser EXCLAMATION() => ref(token, "!");
+
 
   Parser token(Object source, [String name]) {
     Parser parser;

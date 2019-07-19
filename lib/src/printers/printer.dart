@@ -30,7 +30,7 @@ abstract class PrinterBase<ContextType extends PrintContext> extends AstVisitor<
     }
     var length = list?.length ?? 0;
 
-    if(length == 0 && (!(style?.printIfEmpty) ?? false)) {
+    if(length == 0 && (!((style?.printIfEmpty) ?? false))) {
       return;
     }
 
