@@ -40,11 +40,11 @@ class AntlrGrammarDefinition extends GrammarBaseDefinition {
   }
   
   Parser ruleExpression() {
-    return ref(referenceExpression) |
+    return ref(zeroOrMoreExpression) |
+    ref(oneOrMoreExpression) |
+    ref(optionalExpression) |
+    ref(referenceExpression) |
       ref(parenthesisExpression) |
-      ref(zeroOrMoreExpression) |
-      ref(oneOrMoreExpression) |
-      ref(optionalExpression) |
       ref(tokenExpression);
   }
 
@@ -61,7 +61,7 @@ class AntlrGrammarDefinition extends GrammarBaseDefinition {
   }
 
   Parser oneOrMoreExpression() {
-    return ref(referenceExpression).seq(ref(PLUS));
+    return ref(unaryExpression) & ref(PLUS);
   }
 
   Parser unaryExpression() {
@@ -71,7 +71,6 @@ class AntlrGrammarDefinition extends GrammarBaseDefinition {
   Parser parenthesisExpression() {
     return ref(OPEN_PARENTHESIS) & ref(ruleOptions) & ref(CLOSE_PARENTHESIS);
   }
-
 
   Parser tokenExpression() {
     return ref(STRING);

@@ -9,8 +9,8 @@ void main() {
     grammar GraphqlSDL;
 import GraphqlCommon;
 
-hhh: ggg ;
-key: ffft | fgff  (ab | dc);
+hhh: (ggg | ff)* ;
+key: ffft | fgff?  (ab | dc);
 
 """);
 
