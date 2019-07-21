@@ -1,7 +1,5 @@
-import 'package:petitparser_extras/src/ast/index.dart';
-import 'package:petitparser_extras/src/grammer/graphschema.dart';
-import 'package:petitparser_extras/src/praser/graphschema.dart';
-import 'package:petitparser_extras/src/printers/graphschema.dart';
+
+import 'package:petitparser_extras/petitparser_extras.dart';
 import 'package:test/test.dart';
 
 void main() {

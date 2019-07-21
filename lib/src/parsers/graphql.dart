@@ -1,9 +1,7 @@
 
 
-import 'package:petitparser_extras/src/ast/index.dart';
-import 'package:petitparser_extras/src/grammer/graphql.dart';
-import 'package:petitparser_extras/src/praser/transformer.dart';
 import 'package:petitparser/petitparser.dart';
+import 'package:petitparser_extras/petitparser_extras.dart';
 
 
 class GraphQLParser extends GrammarParser  {

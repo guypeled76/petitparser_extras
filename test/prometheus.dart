@@ -1,4 +1,4 @@
-import 'package:petitparser_extras/src/praser/index.dart';
+import 'package:petitparser_extras/petitparser_extras.dart';
 import 'package:test/test.dart';
 
 void main() {

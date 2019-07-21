@@ -1,7 +1,6 @@
 
-import 'package:petitparser_extras/src/grammer/graphschema.dart';
-import 'package:petitparser_extras/src/praser/transformer.dart';
 import 'package:petitparser/petitparser.dart';
+import 'package:petitparser_extras/petitparser_extras.dart';
 
 
 class GraphSchemaParser extends GrammarParser  {

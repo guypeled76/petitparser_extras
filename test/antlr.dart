@@ -1,6 +1,5 @@
-import 'package:petitparser_extras/src/grammer/antlr.dart';
-import 'package:petitparser_extras/src/praser/antlr.dart';
-import 'package:petitparser_extras/src/printers/petit.dart';
+
+import 'package:petitparser_extras/petitparser_extras.dart';
 import 'package:test/test.dart';
 
 void main() {

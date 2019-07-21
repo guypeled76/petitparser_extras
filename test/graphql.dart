@@ -1,6 +1,6 @@
-import 'package:petitparser_extras/src/ast/index.dart';
-import 'package:petitparser_extras/src/praser/graphql.dart';
-import 'package:petitparser_extras/src/printers/graphql.dart';
+
+
+import 'package:petitparser_extras/petitparser_extras.dart';
 import 'package:test/test.dart';
 
 void main() {
