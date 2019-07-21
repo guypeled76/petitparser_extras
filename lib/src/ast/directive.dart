@@ -2,7 +2,7 @@ import 'index.dart';
 
 class DirectiveNode extends NamedNode implements ContainerNode {
 
-  final List<ArgumentNode> arguments;
+  final List<ArgumentDefinition> arguments;
 
   DirectiveNode(String name, this.arguments) : super(name);
 

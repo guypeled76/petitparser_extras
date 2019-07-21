@@ -15,7 +15,7 @@ class ParserTransformer {
 
   Parser as_numberNode(Parser parser) {
     return parser.trim().flatten().map((value) =>
-        PrimitiveNode(
+        PrimitiveExpression(
             int.parse(value)
         )
     );
@@ -23,7 +23,7 @@ class ParserTransformer {
 
   Parser as_stringNode(Parser parser) {
     return parser.trim().flatten().map((value) =>
-        PrimitiveNode(
+        PrimitiveExpression(
             value.substring(1, value.length - 1)
         )
     );
@@ -31,7 +31,7 @@ class ParserTransformer {
 
   Parser as_booleanNode(Parser parser) {
     return parser.trim().flatten().map((value) =>
-      PrimitiveNode(
+      PrimitiveExpression(
         value == "true" ? true : false
       )
     );
@@ -45,10 +45,62 @@ class ParserTransformer {
     );
   }
 
+  Parser as_variableNode(Parser parser) {
+    return parser.trim().map((value) =>
+        VariableDefinition(
+            value
+        )
+    );
+  }
+
+  Parser as_attributeNode(Parser parser, [String name]) {
+    return parser.trim().map((value) =>
+        AttributeDefinition(
+            name ?? as_name(value), as_value(value)
+        )
+    );
+  }
+
+  Parser as_unaryNode(Parser parser, UnaryOperator operator) {
+    return parser.map((value) =>
+        UnaryExpression(
+            operator,
+            as_value(value)
+        )
+    );
+  }
+
+  Parser as_binaryNode(Parser parser, BinaryOperator operator) {
+    return parser.map((value) {
+      Expression resultNode;
+      for (Expression expressionNode in as_list(value)) {
+        if (resultNode == null) {
+          resultNode = ParenthesisExpression(expressionNode);
+        } else {
+          resultNode = BinaryExpression(
+              operator,
+              resultNode,
+              expressionNode
+          );
+        }
+      }
+
+      return resultNode;
+    });
+  }
+
+  Parser as_parenthesis(Parser parser) {
+    return parser.map((value) =>
+        ParenthesisExpression(
+            as_value(value)
+        )
+    );
+  }
+
 
   Parser as_argumentNode(Parser parser) {
     return parser.map((value) =>
-        ArgumentNode(
+        ArgumentDefinition(
             as_name(value),
             as_value(value)
         )
@@ -78,7 +130,7 @@ class ParserTransformer {
 
   Parser as_primitiveNode<ValueType>(Parser parser, Map<String,ValueType> map) {
     return parser.map((value) =>
-      PrimitiveNode<ValueType>(
+      PrimitiveExpression<ValueType>(
         map[value] ?? map[""]
       )
     );
@@ -99,7 +151,7 @@ class ParserTransformer {
     if(value is ValueType) {
       return value;
     }
-    if(value is PrimitiveNode<ValueType>){
+    if(value is PrimitiveExpression<ValueType>){
       return value.value;
     }
     if(value is List) {
@@ -131,7 +183,7 @@ class ParserTransformer {
         yield item;
       } else if (item is List) {
         yield* _items(item);
-      } else if(item is PrimitiveNode<ItemType>){
+      } else if(item is PrimitiveExpression<ItemType>){
         yield item.value;
       }
     }

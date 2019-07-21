@@ -2,7 +2,7 @@ import 'index.dart';
 
 class FieldNode extends NamedNode implements ContainerNode {
 
-  final List<ArgumentNode> arguments;
+  final List<ArgumentDefinition> arguments;
 
   final List<FieldNode> fields;
 

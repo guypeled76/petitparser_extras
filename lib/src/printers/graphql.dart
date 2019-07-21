@@ -10,7 +10,7 @@ class GraphQLPrinter extends PrinterBase<GraphQLPrinterContext> {
     print_list(compilationUnit.children, context.OperationsStyle, context);
   }
 
-  void visitArgumentNode(ArgumentNode argumentNode, GraphQLPrinterContext context) {
+  void visitArgumentDefinition(ArgumentDefinition argumentNode, GraphQLPrinterContext context) {
     print_item(argumentNode.name, null, context);
     print_item(argumentNode.value, context.ArgumentValueStyle, context);
   }
@@ -21,7 +21,7 @@ class GraphQLPrinter extends PrinterBase<GraphQLPrinterContext> {
     print_list(fieldNode.fields, context.FieldsStyle, context);
   }
 
-  void visitExpressionNode(ExpressionNode valueNode, GraphQLPrinterContext  context) {
+  void visitExpressionNode(Expression valueNode, GraphQLPrinterContext  context) {
     this.print_item(valueNode.toString(), null, context);
   }
 
@@ -31,11 +31,11 @@ class GraphQLPrinter extends PrinterBase<GraphQLPrinterContext> {
     this.print_list(operationNode.fields, context.FieldsStyle, context);
   }
 
-  void visitVariableNode(VariableNode variableNode, GraphQLPrinterContext context) {
+  void visitVariableDefinition(VariableDefinition variableNode, GraphQLPrinterContext context) {
     this.print_item("\$${variableNode.name}", null, context);
   }
 
-  void visitPrimitiveNode(PrimitiveNode primitiveNode, GraphQLPrinterContext context) {
+  void visitPrimitiveExpression(PrimitiveExpression primitiveNode, GraphQLPrinterContext context) {
     this.print_item(primitiveNode.toString(), null, context);
   }
 

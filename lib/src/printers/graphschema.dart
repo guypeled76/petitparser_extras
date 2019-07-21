@@ -10,7 +10,7 @@ class GraphSchemaPrinter extends PrinterBase<GraphSchemaPrinterContext> {
     print_list(compilationUnit.children, context.OperationsStyle, context);
   }
 
-  void visitArgumentNode(ArgumentNode argumentNode, GraphSchemaPrinterContext context) {
+  void visitArgumentDefinition(ArgumentDefinition argumentNode, GraphSchemaPrinterContext context) {
     print_item(argumentNode.name, null, context);
     print_item(argumentNode.value, context.ArgumentValueStyle, context);
   }
@@ -21,7 +21,7 @@ class GraphSchemaPrinter extends PrinterBase<GraphSchemaPrinterContext> {
     print_list(fieldNode.fields, context.FieldsStyle, context);
   }
 
-  void visitExpressionNode(ExpressionNode valueNode, GraphSchemaPrinterContext  context) {
+  void visitExpressionNode(Expression valueNode, GraphSchemaPrinterContext  context) {
     this.print_item(valueNode.toString(), null, context);
   }
 
@@ -31,11 +31,11 @@ class GraphSchemaPrinter extends PrinterBase<GraphSchemaPrinterContext> {
     this.print_list(operationNode.fields, context.FieldsStyle, context);
   }
 
-  void visitVariableNode(VariableNode variableNode, GraphSchemaPrinterContext context) {
+  void visitVariableDefinition(VariableDefinition variableNode, GraphSchemaPrinterContext context) {
     this.print_item("\$${variableNode.name}", null, context);
   }
 
-  void visitPrimitiveNode(PrimitiveNode primitiveNode, GraphSchemaPrinterContext context) {
+  void visitPrimitiveExpression(PrimitiveExpression primitiveNode, GraphSchemaPrinterContext context) {
     this.print_item(primitiveNode.toString(), null, context);
   }
 

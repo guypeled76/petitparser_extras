@@ -1,15 +1,15 @@
 import 'index.dart';
 
-class ArgumentNode extends NamedNode implements ExpressionNode {
+class ArgumentDefinition extends Definition implements Expression {
 
 
-  final ExpressionNode value;
+  final Expression value;
 
-  ArgumentNode(name, this.value) : super(name);
+  ArgumentDefinition(name, this.value) : super(name);
 
   @override
   ResultType visit<ResultType, ContextType>(AstVisitor<ResultType, ContextType> visitor, ContextType context) {
-    return visitor.visitArgumentNode(this, context);
+    return visitor.visitArgumentDefinition(this, context);
   }
 
 

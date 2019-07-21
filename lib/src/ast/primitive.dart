@@ -3,15 +3,15 @@
 import 'index.dart';
 
 
-class PrimitiveNode<PrimitiveType> extends AstNode implements ExpressionNode {
+class PrimitiveExpression<PrimitiveType> extends Expression {
   final PrimitiveType value;
 
-  PrimitiveNode(this.value);
+  PrimitiveExpression(this.value);
 
 
   @override
   ResultType visit<ResultType, ContextType>(AstVisitor<ResultType, ContextType> visitor, ContextType context) {
-    return visitor.visitPrimitiveNode(this, context);
+    return visitor.visitPrimitiveExpression(this, context);
   }
 
   @override

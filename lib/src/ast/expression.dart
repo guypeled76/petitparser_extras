@@ -3,9 +3,9 @@
 
 import 'node.dart';
 
-abstract class ExpressionNode extends AstNode {
+abstract class Expression extends AstNode {
 
 
-  ExpressionNode();
+  Expression();
 
 }

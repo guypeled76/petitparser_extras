@@ -31,6 +31,7 @@ class AntlrGrammarDefinition extends GrammarBaseDefinition {
     return ref(name) & ref(COLON) & ref(ruleOptions) & ref(SEMI_COLON);
   }
 
+
   Parser ruleOptions() {
     return ref(ruleExpressions).separatedBy(ref(PIPE));
   }
