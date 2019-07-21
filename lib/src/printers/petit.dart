@@ -3,7 +3,7 @@
 
 import 'package:petitparser_extras/src/ast/index.dart';
 
-class PetitPrinter extends PrinterBase<PetitPrinterContext> {
+class PetitPrinter extends PrinterBase<PetitPrinterContext> implements AntrlAstVisitor<void, PetitPrinterContext>{
 
 
 
@@ -17,12 +17,22 @@ class PetitPrinter extends PrinterBase<PetitPrinterContext> {
   }
 
   @override
-  void visitAttributeDefinition(AttributeDefinition attributeNode, PetitPrinterContext context) {
+  void visitAntlrRuleDefinition(AntlrRuleDefinition antlrRuleDefinition, PetitPrinterContext context) {
     print_item("Parser ", null, context);
-    print_item(attributeNode.name, null, context);
+    print_item(antlrRuleDefinition.name, null, context);
     print_item("() {\nreturn ", null, context);
-    print_item(attributeNode.value, null, context);
+    print_item(antlrRuleDefinition.expression, null, context);
     print_item(";\n};\n", null, context);
+  }
+
+  @override
+  void visitAntlrOptionsExpression(AntlrOptionsExpression antltOptionsExpression, PetitPrinterContext context) {
+    print_list(antltOptionsExpression.expressions, context.OptionsListStyle, context);
+  }
+
+  @override
+  void visitAntlrSequenceExpression(AntrlSequenceExpression antrlSequenceExpression, PetitPrinterContext context) {
+    print_list(antrlSequenceExpression.expressions, context.SequenceListStyle, context);
   }
 
   @override
@@ -60,10 +70,15 @@ class PetitPrinter extends PrinterBase<PetitPrinterContext> {
         break;
     }
   }
-  
-  
 }
 
 class PetitPrinterContext extends PrintContext {
+  final PrintListStyle OptionsListStyle = PrintListStyle(
+    separator: "|"
+  );
+
+  final PrintListStyle SequenceListStyle = PrintListStyle(
+    separator: " "
+  );
 
 }

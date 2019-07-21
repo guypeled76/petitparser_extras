@@ -41,12 +41,12 @@ class AntlrParserDefinition extends AntlrGrammarDefinition with AstBuilder {
 
   @override
   Parser ruleOptions() {
-    return AstBuilder.as_binaryNode(super.ruleOptions(), BinaryOperator.Or);
+    return AntlrBuilder.as_antlrOptionsExpression(super.ruleOptions());
   }
 
   @override
   Parser ruleExpressions() {
-    return AstBuilder.as_binaryNode(super.ruleExpressions(), BinaryOperator.And);
+    return AntlrBuilder.as_antrlSequenceExpression(super.ruleExpressions());
   }
 
   @override
