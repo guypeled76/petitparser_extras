@@ -3,7 +3,7 @@
 
 import 'package:petitparser_extras/src/ast/index.dart';
 
-class GraphSchemaPrinter extends PrinterBase<GraphSchemaPrinterContext> {
+class GraphSchemaPrinter extends PrinterBase<GraphSchemaPrinterContext> implements GqlAstVisitor<void, GraphSchemaPrinterContext>  {
 
 
   void visitCompilationUnit(CompilationUnit compilationUnit, GraphSchemaPrinterContext context) {
@@ -15,7 +15,7 @@ class GraphSchemaPrinter extends PrinterBase<GraphSchemaPrinterContext> {
     print_item(argumentNode.value, context.ArgumentValueStyle, context);
   }
 
-  void visitFieldDefinition(FieldDefinition fieldNode, GraphSchemaPrinterContext context) {
+  void visitGqlFieldDefinition(GqlFieldDefinition fieldNode, GraphSchemaPrinterContext context) {
     print_item(fieldNode.name, fieldNode.arguments?.isEmpty ?? true ? context.SpaceAfterStyle : null, context);
     print_list(fieldNode.arguments, context.FieldArgumentsStyle, context);
     print_list(fieldNode.fields, context.FieldsStyle, context);
@@ -25,7 +25,7 @@ class GraphSchemaPrinter extends PrinterBase<GraphSchemaPrinterContext> {
     this.print_item(valueNode.toString(), null, context);
   }
 
-  void visitOperationNode(OperationNode operationNode, GraphSchemaPrinterContext context) {
+  void visitGqlOperationNode(GqlOperationDefinition operationNode, GraphSchemaPrinterContext context) {
     this.print_item(operationNode.typeName, context.SpaceAfterStyle, context);
     this.print_item(operationNode.name, context.SpaceAfterStyle, context);
     this.print_list(operationNode.fields, context.FieldsStyle, context);

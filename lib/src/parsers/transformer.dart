@@ -107,9 +107,9 @@ class ParserTransformer {
     );
   }
 
-  Parser as_fieldNode(Parser parser) {
+  Parser as_gqlField(Parser parser) {
     return parser.map((value) =>
-        FieldDefinition(
+        GqlFieldDefinition(
             as_name(value),
             as_list(value),
             as_list(value),
@@ -118,9 +118,9 @@ class ParserTransformer {
     );
   }
 
-  Parser as_operation(Parser parser) {
+  Parser as_gqlOperation(Parser parser) {
     return parser.map((value) =>
-        OperationNode(
+        GqlOperationDefinition(
             as_name(value),
             as_value_test(value, OperationType.Query),
             as_list(value)

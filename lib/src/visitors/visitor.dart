@@ -19,19 +19,11 @@ class AstVisitor<ResultType, ContextType> {
     return null;
   }
 
-  ResultType visitFieldDefinition(FieldDefinition fieldNode, ContextType context) {
-    return null;
-  }
-
   ResultType visitNameNode(NameNode nameNode, ContextType context) {
     return null;
   }
 
   ResultType visitExpressionNode(Expression valueNode, ContextType  context) {
-    return null;
-  }
-
-  ResultType visitOperationNode(OperationNode operationNode, ContextType context) {
     return null;
   }
 

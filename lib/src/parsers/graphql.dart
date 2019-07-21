@@ -18,7 +18,7 @@ class GraphQLParserDefinition extends GraphQLGrammarDefinition with ParserTransf
   }
 
   Parser operation() {
-    return as_operation(super.operation());
+    return as_gqlOperation(super.operation());
   }
 
   Parser operationType() {
@@ -31,7 +31,7 @@ class GraphQLParserDefinition extends GraphQLGrammarDefinition with ParserTransf
 
 
   Parser field() {
-    return as_fieldNode(super.field());
+    return as_gqlField(super.field());
   }
 
   Parser fieldName() {

@@ -1,6 +1,7 @@
 import 'package:petitparser/petitparser.dart';
+import 'package:petitparser_extras/petitparser_extras.dart';
 
-import 'graphqlbase.dart';
+
 
 class GraphQLGrammar extends GrammarParser {
   GraphQLGrammar() : super(const GraphQLGrammarDefinition());
