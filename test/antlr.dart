@@ -10,8 +10,15 @@ void main() {
     grammar GraphqlSDL;
 import GraphqlCommon;
 
-hhh: (ggg | ff)* ;
-key: ffft | fgff?  (ab | dc);
+typeSystemDefinition: description?
+schemaDefinition |
+typeDefinition |
+typeExtension |
+directiveDefinition
+;
+
+schemaDefinition : description? SCHEMA directives? '{' operationTypeDefinition+ '}';
+
 
 """);
 
@@ -22,10 +29,18 @@ key: ffft | fgff?  (ab | dc);
     AntlrParser grammar = AntlrParser();
 
     var value = grammar.parse("""
-    grammar GraphqlSDL;
+grammar GraphqlSDL;
 import GraphqlCommon;
 
-hhh: ffff fffg+ ;
+typeSystemDefinition: description?
+schemaDefinition |
+typeDefinition |
+typeExtension |
+directiveDefinition
+;
+
+schemaDefinition : description? SCHEMA directives? '{' operationTypeDefinition+ '}';
+
 
 """);
 

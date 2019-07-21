@@ -24,7 +24,7 @@ class AstBuilder {
   static Parser as_stringExpression(Parser parser) {
     return parser.trim().flatten().map((value) =>
         PrimitiveExpression(
-            value.substring(1, value.length - 1)
+            value
         )
     );
   }

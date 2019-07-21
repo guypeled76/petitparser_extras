@@ -20,9 +20,9 @@ class PetitPrinter extends PrinterBase<PetitPrinterContext> implements AntrlAstV
   void visitAntlrRuleDefinition(AntlrRuleDefinition antlrRuleDefinition, PetitPrinterContext context) {
     print_item("Parser ", null, context);
     print_item(antlrRuleDefinition.name, null, context);
-    print_item("() {\nreturn ", null, context);
+    print_item("() {\n\treturn ", null, context);
     print_item(antlrRuleDefinition.expression, null, context);
-    print_item(";\n};\n", null, context);
+    print_item(";\n};\n\n", null, context);
   }
 
   @override
@@ -41,10 +41,17 @@ class PetitPrinter extends PrinterBase<PetitPrinterContext> implements AntrlAstV
   }
 
   @override
-  void visitBinaryExpression(BinaryExpression binaryNode, PetitPrinterContext context) {
-    print_item(binaryNode.left, null, context);
-    print_item(binaryNode.operator == BinaryOperator.And ? "&" : "|", null, context);
-    print_item(binaryNode.right, null, context);
+  void visitParenthesisExpression(ParenthesisExpression parenthesisNode, PetitPrinterContext context) {
+    print_item("(", null, context);
+    print_item(parenthesisNode.expression, null, context);
+    print_item(")", null, context);
+  }
+
+  @override
+  void visitPrimitiveExpression(PrimitiveExpression primitiveNode, PetitPrinterContext context) {
+    print_item("ref(token,", null, context);
+    print_item(primitiveNode.value, null, context);
+    print_item(")", null, context);
   }
 
   @override
@@ -73,13 +80,15 @@ class PetitPrinter extends PrinterBase<PetitPrinterContext> implements AntrlAstV
   
   @override
   void visitIdentifierExpression(IdentifierExpression identifierExpression, context) {
+    print_item("ref(", null, context);
     print_item(identifierExpression.identifier, null, context);
+    print_item(")", null, context);
   }
 }
 
 class PetitPrinterContext extends PrintContext {
   final PrintListStyle OptionsListStyle = PrintListStyle(
-    separator: "|"
+    separator: " | "
   );
 
   final PrintListStyle SequenceListStyle = PrintListStyle(
