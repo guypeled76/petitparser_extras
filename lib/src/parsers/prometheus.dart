@@ -8,7 +8,7 @@ class PrometheusParser extends GrammarParser  {
   PrometheusParser() : super(const PrometheusParserDefinition());
 }
 
-class PrometheusParserDefinition extends PrometheusGrammarDefinition with ParserTransformer {
+class PrometheusParserDefinition extends PrometheusGrammarDefinition with AstBuilder {
   const PrometheusParserDefinition();
 
 

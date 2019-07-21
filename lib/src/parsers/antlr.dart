@@ -9,7 +9,7 @@ class AntlrParser extends GrammarParser  {
   AntlrParser() : super(const AntlrParserDefinition());
 }
 
-class AntlrParserDefinition extends AntlrGrammarDefinition with ParserTransformer {
+class AntlrParserDefinition extends AntlrGrammarDefinition with AstBuilder {
   const AntlrParserDefinition();
 
 

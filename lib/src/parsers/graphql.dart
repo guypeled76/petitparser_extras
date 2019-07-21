@@ -8,7 +8,7 @@ class GraphQLParser extends GrammarParser  {
   GraphQLParser() : super(const GraphQLParserDefinition());
 }
 
-class GraphQLParserDefinition extends GraphQLGrammarDefinition with ParserTransformer {
+class GraphQLParserDefinition extends GraphQLGrammarDefinition with AstBuilder {
   const GraphQLParserDefinition();
 
 

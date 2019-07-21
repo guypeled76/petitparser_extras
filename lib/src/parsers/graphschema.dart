@@ -7,7 +7,7 @@ class GraphSchemaParser extends GrammarParser  {
   GraphSchemaParser() : super(const GraphSchemaParserDefinition());
 }
 
-class GraphSchemaParserDefinition extends GraphSchemaGrammarDefinition with ParserTransformer {
+class GraphSchemaParserDefinition extends GraphSchemaGrammarDefinition with AstBuilder {
   const GraphSchemaParserDefinition();
 
 

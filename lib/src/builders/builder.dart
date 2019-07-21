@@ -3,7 +3,7 @@
 import 'package:petitparser/petitparser.dart';
 import 'package:petitparser_extras/petitparser_extras.dart';
 
-class ParserTransformer {
+class AstBuilder {
 
   Parser as_compilationNode(Parser parser) {
     return parser.map((value) =>
