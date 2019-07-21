@@ -70,6 +70,11 @@ class PetitPrinter extends PrinterBase<PetitPrinterContext> implements AntrlAstV
         break;
     }
   }
+  
+  @override
+  void visitIdentifierExpression(IdentifierExpression identifierExpression, context) {
+    print_item(identifierExpression.identifier, null, context);
+  }
 }
 
 class PetitPrinterContext extends PrintContext {
@@ -78,7 +83,7 @@ class PetitPrinterContext extends PrintContext {
   );
 
   final PrintListStyle SequenceListStyle = PrintListStyle(
-    separator: " "
+    separator: " & "
   );
 
 }

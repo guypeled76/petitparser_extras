@@ -5,6 +5,14 @@ import 'package:petitparser_extras/petitparser_extras.dart';
 
 class AntlrBuilder {
 
+  static Parser as_antlrRuleDefinition(Parser parser) {
+    return parser.map((value) =>
+        AntlrRuleDefinition(
+            AstBuilder.as_name(value),
+            AstBuilder.as_value(value)
+        )
+    );
+  }
 
   static Parser as_antrlSequenceExpression(Parser parser) {
     return parser.map((value) =>

@@ -26,17 +26,17 @@ class AntlrParserDefinition extends AntlrGrammarDefinition with AstBuilder {
 
   @override
   Parser importDefinition() {
-    return AstBuilder.as_attributeNode(super.importDefinition(), "import");
+    return AstBuilder.as_attributeDefinition(super.importDefinition(), "import");
   }
 
   @override
   Parser grammarDefinition() {
-    return AstBuilder.as_attributeNode(super.grammarDefinition(), "grammar");
+    return AstBuilder.as_attributeDefinition(super.grammarDefinition(), "grammar");
   }
 
   @override
   Parser ruleDefinition() {
-    return AstBuilder.as_attributeNode(super.ruleDefinition());
+    return AntlrBuilder.as_antlrRuleDefinition(super.ruleDefinition());
   }
 
   @override
@@ -51,31 +51,31 @@ class AntlrParserDefinition extends AntlrGrammarDefinition with AstBuilder {
 
   @override
   Parser referenceExpression() {
-    return AstBuilder.as_variableNode(super.referenceExpression());
+    return AstBuilder.as_identifierExpression(super.referenceExpression());
   }
 
   @override
   Parser optionalExpression() {
-    return AstBuilder.as_unaryNode(super.optionalExpression(), UnaryOperator.Optional);
+    return AstBuilder.as_unaryExpression(super.optionalExpression(), UnaryOperator.Optional);
   }
 
   @override
   Parser zeroOrMoreExpression() {
-    return AstBuilder.as_unaryNode(super.zeroOrMoreExpression(), UnaryOperator.ZeroOrMore);
+    return AstBuilder.as_unaryExpression(super.zeroOrMoreExpression(), UnaryOperator.ZeroOrMore);
   }
 
   @override
   Parser oneOrMoreExpression() {
-    return AstBuilder.as_unaryNode(super.oneOrMoreExpression(), UnaryOperator.OneOrMore);
+    return AstBuilder.as_unaryExpression(super.oneOrMoreExpression(), UnaryOperator.OneOrMore);
   }
 
   @override
   Parser parenthesisExpression() {
-    return AstBuilder.as_parenthesis(super.parenthesisExpression());
+    return AstBuilder.as_parenthesisExpression(super.parenthesisExpression());
   }
 
   Parser STRING() {
-    return AstBuilder.as_stringNode(super.STRING());
+    return AstBuilder.as_stringExpression(super.STRING());
   }
 
 

@@ -21,15 +21,15 @@ class GraphSchemaParserDefinition extends GraphSchemaGrammarDefinition with AstB
   }
 
   Parser NUMBER() {
-    return AstBuilder.as_numberNode(super.NUMBER());
+    return AstBuilder.as_numberExpression(super.NUMBER());
   }
 
   Parser STRING() {
-    return AstBuilder.as_stringNode(super.STRING());
+    return AstBuilder.as_stringExpression(super.STRING());
   }
 
   Parser BOOLEAN() {
-    return AstBuilder.as_booleanNode(super.STRING());
+    return AstBuilder.as_booleanExpression(super.STRING());
   }
 
 }

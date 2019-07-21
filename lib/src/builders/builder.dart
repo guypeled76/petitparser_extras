@@ -13,7 +13,7 @@ class AstBuilder {
     );
   }
 
-  static Parser as_numberNode(Parser parser) {
+  static Parser as_numberExpression(Parser parser) {
     return parser.trim().flatten().map((value) =>
         PrimitiveExpression(
             int.parse(value)
@@ -21,7 +21,7 @@ class AstBuilder {
     );
   }
 
-  static Parser as_stringNode(Parser parser) {
+  static Parser as_stringExpression(Parser parser) {
     return parser.trim().flatten().map((value) =>
         PrimitiveExpression(
             value.substring(1, value.length - 1)
@@ -29,7 +29,7 @@ class AstBuilder {
     );
   }
 
-  static Parser as_booleanNode(Parser parser) {
+  static Parser as_booleanExpression(Parser parser) {
     return parser.trim().flatten().map((value) =>
       PrimitiveExpression(
         value == "true" ? true : false
@@ -45,7 +45,15 @@ class AstBuilder {
     );
   }
 
-  static Parser as_variableNode(Parser parser) {
+  static Parser as_identifierExpression(Parser parser) {
+    return parser.trim().map((value) =>
+        IdentifierExpression(
+            value
+        )
+    );
+  }
+
+  static Parser as_variableDefinition(Parser parser) {
     return parser.trim().map((value) =>
         VariableDefinition(
             value
@@ -53,7 +61,7 @@ class AstBuilder {
     );
   }
 
-  static Parser as_attributeNode(Parser parser, [String name]) {
+  static Parser as_attributeDefinition(Parser parser, [String name]) {
     return parser.trim().map((value) =>
         AttributeDefinition(
             name ?? as_name(value), as_value(value)
@@ -61,7 +69,7 @@ class AstBuilder {
     );
   }
 
-  static Parser as_unaryNode(Parser parser, UnaryOperator operator) {
+  static Parser as_unaryExpression(Parser parser, UnaryOperator operator) {
     return parser.map((value) =>
         UnaryExpression(
             operator,
@@ -70,7 +78,7 @@ class AstBuilder {
     );
   }
 
-  static Parser as_binaryNode(Parser parser, BinaryOperator operator) {
+  static Parser as_binaryExpression(Parser parser, BinaryOperator operator) {
     return parser.map((value) {
       Expression resultNode;
       for (Expression expressionNode in as_list(value)) {
@@ -89,7 +97,7 @@ class AstBuilder {
     });
   }
 
-  static Parser as_parenthesis(Parser parser) {
+  static Parser as_parenthesisExpression(Parser parser) {
     return parser.map((value) =>
         ParenthesisExpression(
             as_value(value)
@@ -98,7 +106,7 @@ class AstBuilder {
   }
 
 
-  static Parser as_argumentNode(Parser parser) {
+  static Parser as_argumentDefinition(Parser parser) {
     return parser.map((value) =>
         ArgumentDefinition(
             as_name(value),
@@ -107,7 +115,7 @@ class AstBuilder {
     );
   }
 
-  static Parser as_primitiveNode<ValueType>(Parser parser, Map<String,ValueType> map) {
+  static Parser as_primitiveExpression<ValueType>(Parser parser, Map<String,ValueType> map) {
     return parser.map((value) =>
       PrimitiveExpression<ValueType>(
         map[value] ?? map[""]
@@ -168,4 +176,6 @@ class AstBuilder {
       }
     }
   }
+
+
 }

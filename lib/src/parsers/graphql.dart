@@ -18,11 +18,11 @@ class GraphQLParserDefinition extends GraphQLGrammarDefinition with GqlBuilder {
   }
 
   Parser operation() {
-    return GqlBuilder.as_gqlOperation(super.operation());
+    return GqlBuilder.as_gqlOperationDefinition(super.operation());
   }
 
   Parser operationType() {
-    return AstBuilder.as_primitiveNode(super.operationType(), {
+    return AstBuilder.as_primitiveExpression(super.operationType(), {
       'mutation': OperationType.Mutation,
       'query':OperationType.Query,
       '':OperationType.Query,
@@ -31,7 +31,7 @@ class GraphQLParserDefinition extends GraphQLGrammarDefinition with GqlBuilder {
 
 
   Parser field() {
-    return GqlBuilder.as_gqlField(super.field());
+    return GqlBuilder.as_gqlFieldDefinition(super.field());
   }
 
   Parser fieldName() {
@@ -39,7 +39,7 @@ class GraphQLParserDefinition extends GraphQLGrammarDefinition with GqlBuilder {
   }
 
   Parser argument() {
-    return AstBuilder.as_argumentNode(super.argument());
+    return AstBuilder.as_argumentDefinition(super.argument());
   }
 
   Parser NAME() {
@@ -47,15 +47,15 @@ class GraphQLParserDefinition extends GraphQLGrammarDefinition with GqlBuilder {
   }
 
   Parser NUMBER() {
-    return AstBuilder.as_numberNode(super.NUMBER());
+    return AstBuilder.as_numberExpression(super.NUMBER());
   }
 
   Parser STRING() {
-    return AstBuilder.as_stringNode(super.STRING());
+    return AstBuilder.as_stringExpression(super.STRING());
   }
 
   Parser BOOLEAN() {
-    return AstBuilder.as_booleanNode(super.STRING());
+    return AstBuilder.as_booleanExpression(super.STRING());
   }
 
 }

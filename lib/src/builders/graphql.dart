@@ -6,7 +6,7 @@ import 'package:petitparser_extras/petitparser_extras.dart';
 class GqlBuilder {
 
 
-  static Parser as_gqlField(Parser parser) {
+  static Parser as_gqlFieldDefinition(Parser parser) {
     return parser.map((value) =>
         GqlFieldDefinition(
             AstBuilder.as_name(value),
@@ -17,7 +17,7 @@ class GqlBuilder {
     );
   }
 
-  static Parser as_gqlOperation(Parser parser) {
+  static Parser as_gqlOperationDefinition(Parser parser) {
     return parser.map((value) =>
         GqlOperationDefinition(
             AstBuilder.as_name(value),
