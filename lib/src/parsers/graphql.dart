@@ -8,21 +8,21 @@ class GraphQLParser extends GrammarParser  {
   GraphQLParser() : super(const GraphQLParserDefinition());
 }
 
-class GraphQLParserDefinition extends GraphQLGrammarDefinition with AstBuilder {
+class GraphQLParserDefinition extends GraphQLGrammarDefinition with GqlBuilder {
   const GraphQLParserDefinition();
 
 
   @override
   Parser start() {
-    return as_compilationNode(super.start());
+    return AstBuilder.as_compilationNode(super.start());
   }
 
   Parser operation() {
-    return as_gqlOperation(super.operation());
+    return GqlBuilder.as_gqlOperation(super.operation());
   }
 
   Parser operationType() {
-    return as_primitiveNode(super.operationType(), {
+    return AstBuilder.as_primitiveNode(super.operationType(), {
       'mutation': OperationType.Mutation,
       'query':OperationType.Query,
       '':OperationType.Query,
@@ -31,7 +31,7 @@ class GraphQLParserDefinition extends GraphQLGrammarDefinition with AstBuilder {
 
 
   Parser field() {
-    return as_gqlField(super.field());
+    return GqlBuilder.as_gqlField(super.field());
   }
 
   Parser fieldName() {
@@ -39,23 +39,23 @@ class GraphQLParserDefinition extends GraphQLGrammarDefinition with AstBuilder {
   }
 
   Parser argument() {
-    return as_argumentNode(super.argument());
+    return AstBuilder.as_argumentNode(super.argument());
   }
 
   Parser NAME() {
-    return as_nameNode(super.NAME());
+    return AstBuilder.as_nameNode(super.NAME());
   }
 
   Parser NUMBER() {
-    return as_numberNode(super.NUMBER());
+    return AstBuilder.as_numberNode(super.NUMBER());
   }
 
   Parser STRING() {
-    return as_stringNode(super.STRING());
+    return AstBuilder.as_stringNode(super.STRING());
   }
 
   Parser BOOLEAN() {
-    return as_booleanNode(super.STRING());
+    return AstBuilder.as_booleanNode(super.STRING());
   }
 
 }

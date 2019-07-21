@@ -14,7 +14,7 @@ class PrometheusParserDefinition extends PrometheusGrammarDefinition with AstBui
 
   @override
   Parser start() {
-    return super.start().map((value) => CompilationUnit(as_list(value)));
+    return super.start().map((value) => CompilationUnit(AstBuilder.as_list(value)));
   }
 
   Parser NAME() {
