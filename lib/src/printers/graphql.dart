@@ -15,7 +15,7 @@ class GraphQLPrinter extends PrinterBase<GraphQLPrinterContext> {
     print_item(argumentNode.value, context.ArgumentValueStyle, context);
   }
 
-  void visitFieldNode(FieldNode fieldNode, GraphQLPrinterContext context) {
+  void visitFieldDefinition(FieldDefinition fieldNode, GraphQLPrinterContext context) {
     print_item(fieldNode.name, fieldNode.arguments?.isEmpty ?? true ? context.SpaceAfterStyle : null, context);
     print_list(fieldNode.arguments, context.FieldArgumentsStyle, context);
     print_list(fieldNode.fields, context.FieldsStyle, context);

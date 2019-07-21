@@ -109,7 +109,7 @@ class ParserTransformer {
 
   Parser as_fieldNode(Parser parser) {
     return parser.map((value) =>
-        FieldNode(
+        FieldDefinition(
             as_name(value),
             as_list(value),
             as_list(value),

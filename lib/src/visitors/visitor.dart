@@ -1,11 +1,9 @@
 
-import 'package:petitparser_extras/src/ast/attribute.dart';
-import 'package:petitparser_extras/src/ast/binary.dart';
-import 'package:petitparser_extras/src/ast/identifier.dart';
-import 'package:petitparser_extras/src/ast/parenthesis.dart';
-import 'package:petitparser_extras/src/ast/unary.dart';
 
-import 'index.dart';
+
+
+
+import 'package:petitparser_extras/src/ast/index.dart';
 
 class AstVisitor<ResultType, ContextType> {
 
@@ -17,11 +15,11 @@ class AstVisitor<ResultType, ContextType> {
     return null;
   }
 
-  ResultType visitDirectiveNode(DirectiveNode directiveNode, ContextType context) {
+  ResultType visitDirectiveDefinition(DirectiveDefinition directiveNode, ContextType context) {
     return null;
   }
 
-  ResultType visitFieldNode(FieldNode fieldNode, ContextType context) {
+  ResultType visitFieldDefinition(FieldDefinition fieldNode, ContextType context) {
     return null;
   }
 

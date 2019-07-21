@@ -11,10 +11,12 @@ export 'variable.dart';
 export 'name.dart';
 export 'argument.dart';
 export 'primitive.dart';
-export 'visitor.dart';
 export 'attribute.dart';
 export 'unary.dart';
 export 'parenthesis.dart';
 export 'binary.dart';
 export 'definition.dart';
+export 'identifier.dart';
+
+export 'package:petitparser_extras/src/visitors/index.dart';
 export 'package:petitparser_extras/src/printers/printer.dart';

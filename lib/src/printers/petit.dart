@@ -2,6 +2,7 @@
 
 
 import 'package:petitparser_extras/src/ast/index.dart';
+import 'package:petitparser_extras/src/visitors/index.dart';
 
 class PetitPrinter extends PrinterBase<PetitPrinterContext> {
 

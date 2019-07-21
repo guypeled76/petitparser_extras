@@ -9,7 +9,7 @@ class OperationNode extends ContainerNode {
 
   final OperationType type;
 
-  final List<FieldNode> fields;
+  final List<FieldDefinition> fields;
 
   OperationNode(String name, this.type, this.fields) : super(name, fields);
 

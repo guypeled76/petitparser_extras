@@ -15,7 +15,7 @@ class GraphSchemaPrinter extends PrinterBase<GraphSchemaPrinterContext> {
     print_item(argumentNode.value, context.ArgumentValueStyle, context);
   }
 
-  void visitFieldNode(FieldNode fieldNode, GraphSchemaPrinterContext context) {
+  void visitFieldDefinition(FieldDefinition fieldNode, GraphSchemaPrinterContext context) {
     print_item(fieldNode.name, fieldNode.arguments?.isEmpty ?? true ? context.SpaceAfterStyle : null, context);
     print_list(fieldNode.arguments, context.FieldArgumentsStyle, context);
     print_list(fieldNode.fields, context.FieldsStyle, context);
