@@ -13,4 +13,12 @@ class AntrlAstVisitor<ResultType, ContextType> {
   ResultType visitAntlrSequenceExpression(AntrlSequenceExpression antrlSequenceExpression, ContextType context) {
     return null;
   }
+
+  ResultType visitAntlrPatternExpression(AntlrPatternExpression antrlPatternExpression, ContextType context)  {
+    return null;
+  }
+
+  ResultType visitAntlrAnyExpression(AntlrAnyExpression antlrAnyExpression, ContextType context)  {
+    return null;
+  }
 }

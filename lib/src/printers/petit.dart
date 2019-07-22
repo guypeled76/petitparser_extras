@@ -48,6 +48,11 @@ class PetitPrinter extends PrinterBase<PetitPrinterContext> implements AntrlAstV
   }
 
   @override
+  void visitAntlrPatternExpression(AntlrPatternExpression antrlPatternExpression, PetitPrinterContext context) {
+    print_items(["ref(pattern,\"", antrlPatternExpression.not ? "^" : "", antrlPatternExpression.pattern, "\")"], context);
+  }
+
+  @override
   void visitNameNode(NameNode nameNode, PetitPrinterContext context) {
     print_item(nameNode.name, null, context);
   }
@@ -91,6 +96,13 @@ class PetitPrinter extends PrinterBase<PetitPrinterContext> implements AntrlAstV
     print_item(identifierExpression.identifier, null, context);
     print_item(")", null, context);
   }
+
+  @override
+  void visitAntlrAnyExpression(AntlrAnyExpression antlrAnyExpression, PetitPrinterContext context) {
+    print_item("ref(any)", null, context);
+  }
+
+
 }
 
 class PetitPrinterContext extends PrintContext {

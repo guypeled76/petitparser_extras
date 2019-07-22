@@ -85,6 +85,29 @@ class AntlrParserDefinition extends AntlrGrammarDefinition with AstBuilder {
     return AstBuilder.as_parenthesisExpression(super.parenthesisExpression());
   }
 
+  @override
+  Parser patternExpression() {
+    return AntlrBuilder.as_patternExpression(super.patternExpression());
+  }
+
+  @override
+  Parser patternNot() {
+    return AntlrBuilder.as_patternNot(super.patternNot());
+  }
+
+  @override
+  Parser patternContent() {
+    return AntlrBuilder.as_patternContent(super.patternContent());
+  }
+
+  Parser anyExpression() {
+    return AntlrBuilder.as_anyExpression(super.anyExpression());
+  }
+
+
+
+
+
   Parser STRING() {
     return AstBuilder.as_stringExpression(super.STRING());
   }

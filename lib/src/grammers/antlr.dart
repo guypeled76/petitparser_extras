@@ -44,7 +44,11 @@ class AntlrGrammarDefinition extends GrammarBaseDefinition {
   }
 
   Parser ruleDefinition() {
-    return ref(ruleFragment).optional() & ref(name) & ref(COLON) & ref(ruleOptions) & ref(SEMI_COLON);
+    return ref(ruleFragment).optional() & ref(name) & ref(COLON) & ref(ruleOptions) & ref(ruleChannel).optional() & ref(SEMI_COLON);
+  }
+
+  Parser ruleChannel() {
+    return ref(token, "->") & ref(name) & (ref(OPEN_PARENTHESIS) & ref(NUMBER) & ref(CLOSE_PARENTHESIS)).optional();
   }
 
   Parser ruleFragment() {
@@ -66,7 +70,10 @@ class AntlrGrammarDefinition extends GrammarBaseDefinition {
     ref(optionalExpression) |
     ref(referenceExpression) |
       ref(parenthesisExpression) |
-      ref(tokenExpression);
+      ref(tokenExpression) |
+    ref(patternExpression) |
+    ref(anyExpression) |
+    ref(rangeExpression);
   }
 
   Parser referenceExpression() {
@@ -86,7 +93,7 @@ class AntlrGrammarDefinition extends GrammarBaseDefinition {
   }
 
   Parser unaryExpression() {
-    return ref(referenceExpression) | ref(parenthesisExpression) | ref(tokenExpression);
+    return ref(referenceExpression) | ref(parenthesisExpression) | ref(tokenExpression) | ref(patternExpression) | ref(anyExpression);
   }
 
   Parser parenthesisExpression() {
@@ -95,6 +102,26 @@ class AntlrGrammarDefinition extends GrammarBaseDefinition {
 
   Parser tokenExpression() {
     return ref(STRING);
+  }
+
+  Parser patternExpression() {
+    return ref(patternNot).optional() & ref(OPEN_SQUARE) & ref(patternContent) & ref(CLOSE_SQUARE).trim();
+  }
+
+  Parser patternNot() {
+    return ref(char, "~");
+  }
+
+  Parser patternContent() {
+    return ref(pattern,"^]").plus().flatten();
+  }
+
+  Parser anyExpression() {
+    return ref(token, ".*");
+  }
+
+  Parser rangeExpression() {
+    return ref(STRING) & ref(token,"..") & ref(STRING);
   }
 
   Parser name() {

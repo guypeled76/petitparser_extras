@@ -7,12 +7,7 @@ void main() {
     AntlrGrammar grammar = AntlrGrammar();
 
     var value = grammar.parse("""
-fragment
-SignedInteger
-	:	Sign? Digits
-	;
-;
-
+CR: [dd] -> channel(3);
 """);
 
     print("result:\n${value}");
@@ -22,11 +17,8 @@ SignedInteger
     AntlrParser grammar = AntlrParser();
 
     var value = grammar.parse("""
-
-fragment
-SignedInteger
-	:	Sign? Digits
-	;
+NAME: [_A-Za-z][_0-9A-Za-z]* ;
+NonZeroDigit: ('1'.. '9');
 """);
 
     PetitPrinter petitPrinter = PetitPrinter();
