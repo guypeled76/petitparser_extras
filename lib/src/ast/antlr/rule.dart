@@ -6,7 +6,9 @@ class AntlrRuleDefinition extends Definition {
 
   final Expression expression;
 
-  AntlrRuleDefinition(String name, this.expression) : super(name);
+  final bool fragment;
+
+  AntlrRuleDefinition(String name, this.fragment, this.expression) : super(name);
 
   @override
   List<AstNode> get children => [expression];

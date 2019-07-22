@@ -7,18 +7,11 @@ void main() {
     AntlrGrammar grammar = AntlrGrammar();
 
     var value = grammar.parse("""
-    grammar GraphqlSDL;
-import GraphqlCommon;
-
-typeSystemDefinition: description?
-schemaDefinition |
-typeDefinition |
-typeExtension |
-directiveDefinition
+fragment
+SignedInteger
+	:	Sign? Digits
+	;
 ;
-
-schemaDefinition : description? SCHEMA directives? '{' operationTypeDefinition+ '}';
-
 
 """);
 
@@ -29,19 +22,11 @@ schemaDefinition : description? SCHEMA directives? '{' operationTypeDefinition+ 
     AntlrParser grammar = AntlrParser();
 
     var value = grammar.parse("""
-grammar GraphqlSDL;
-import GraphqlCommon;
 
-typeSystemDefinition: description?
-schemaDefinition |
-typeDefinition |
-typeExtension |
-directiveDefinition
-;
-
-schemaDefinition : description? SCHEMA directives? '{' operationTypeDefinition+ '}';
-
-
+fragment
+SignedInteger
+	:	Sign? Digits
+	;
 """);
 
     PetitPrinter petitPrinter = PetitPrinter();

@@ -15,7 +15,15 @@ class AntlrGrammarDefinition extends GrammarBaseDefinition {
   }
 
   Parser document() {
-    return ref(grammarDefinition).optional() & ref(importDefinition).optional() & ref(ruleDefinition).star();
+    return ref(documentHeader).star() & ref(documentContent).star();
+  }
+
+  Parser documentHeader() {
+    return ref(grammarDefinition) | ref(importDefinition) | ref(comment);
+  }
+
+  Parser documentContent() {
+    return ref(ruleDefinition) | ref(comment);
   }
 
 
@@ -27,8 +35,20 @@ class AntlrGrammarDefinition extends GrammarBaseDefinition {
     return (ref(IMPORT) & ref(name) & ref(SEMI_COLON));
   }
 
+  Parser comment() {
+    return (ref(string, "//") & ref(lineComment) & ref(char, "\n")).flatten();
+  }
+  
+  Parser lineComment() {
+    return  ref(pattern, "^\n").star().flatten(); 
+  }
+
   Parser ruleDefinition() {
-    return ref(name) & ref(COLON) & ref(ruleOptions) & ref(SEMI_COLON);
+    return ref(ruleFragment).optional() & ref(name) & ref(COLON) & ref(ruleOptions) & ref(SEMI_COLON);
+  }
+
+  Parser ruleFragment() {
+    return ref(FRAGMENT);
   }
 
 
@@ -85,5 +105,7 @@ class AntlrGrammarDefinition extends GrammarBaseDefinition {
   Parser GRAMMAR() => ref(token, "grammar");
 
   Parser IMPORT() => ref(token, "import");
+
+  Parser FRAGMENT() => ref(token, "fragment");
 
 }

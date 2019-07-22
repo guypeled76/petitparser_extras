@@ -69,6 +69,30 @@ class AstBuilder {
     );
   }
 
+  static DataType as_data_value<DataType>(Object value, String name, [DataType defaultValue]) {
+    for(Data<DataType> data in as_list<Data<DataType>>(value)) {
+      if(data.name == name) {
+        return data.value;
+      }
+    }
+
+    return defaultValue;
+  }
+
+
+  static Parser as_data<DataType>(Parser parser, String name, DataType value) {
+    return parser.map((_) =>
+        Data<DataType>(name, value)
+    );
+  }
+
+
+  static Parser as_comment(Parser parser) {
+    return parser.trim().map((value) =>
+        Comment(value)
+    );
+  }
+
   static Parser as_unaryExpression(Parser parser, UnaryOperator operator) {
     return parser.map((value) =>
         UnaryExpression(

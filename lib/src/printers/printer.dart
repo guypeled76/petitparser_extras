@@ -3,6 +3,24 @@ import 'package:petitparser_extras/src/ast/index.dart';
 abstract class PrinterBase<ContextType extends PrintContext> extends AstVisitor<void, ContextType> {
   
 
+  void print_comment(String comment, PrintCommentsStyle style, ContextType context) {
+    comment = comment ?? "";
+
+    if(comment.contains("\n")) {
+      print_item(style.beforeBlockComment, null, context);
+      print_item(comment, null, context);
+      print_item(style.afterBlockComment, null, context);
+    } else {
+      print_item(style.beforeLineComment, null, context);
+      print_item(comment, null, context);
+    }
+  }
+
+  void print_items(List items, ContextType context) {
+    for(var item in items) {
+      print_item(item, null, context);
+    }
+  }
 
   void print_item(Object item, PrintItemStyle style, ContextType context) {
     if(item == null) {
@@ -128,6 +146,18 @@ class PrintContext {
   String toString() {
     return buffer.toString();
   }
+}
+
+class PrintCommentsStyle {
+  final String beforeLineComment;
+  final String beforeBlockComment;
+  final String afterBlockComment;
+
+  PrintCommentsStyle({
+    this.afterBlockComment,
+    this.beforeBlockComment,
+    this.beforeLineComment
+  });
 }
 
 class PrintItemStyle {

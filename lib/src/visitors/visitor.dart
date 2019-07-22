@@ -3,6 +3,8 @@
 
 
 
+import 'package:petitparser_extras/src/ast/comment.dart';
+import 'package:petitparser_extras/src/ast/data.dart';
 import 'package:petitparser_extras/src/ast/index.dart';
 
 class AstVisitor<ResultType, ContextType> {
@@ -51,7 +53,15 @@ class AstVisitor<ResultType, ContextType> {
     return null;
   }
 
-  ResultType visitIdentifierExpression(IdentifierExpression identifierNode, context) {
+  ResultType visitIdentifierExpression(IdentifierExpression identifierNode,  ContextType context) {
+    return null;
+  }
+
+  ResultType visitComment(Comment comment, ContextType context) {
+    return null;
+  }
+
+  ResultType visitData(Data data, ContextType context)  {
     return null;
   }
 }

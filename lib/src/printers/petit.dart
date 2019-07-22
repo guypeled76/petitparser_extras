@@ -18,16 +18,28 @@ class PetitPrinter extends PrinterBase<PetitPrinterContext> implements AntrlAstV
 
   @override
   void visitAntlrRuleDefinition(AntlrRuleDefinition antlrRuleDefinition, PetitPrinterContext context) {
-    print_item("Parser ", null, context);
-    print_item(antlrRuleDefinition.name, null, context);
-    print_item("() {\n\treturn ", null, context);
-    print_item(antlrRuleDefinition.expression, null, context);
-    print_item(";\n};\n\n", null, context);
+    print_items([
+      "Parser ",
+      antlrRuleDefinition.name,
+      "() {\n\treturn ",
+      antlrRuleDefinition.expression,
+      ";\n};\n\n"
+    ], context);
+  }
+
+  @override
+  void visitComment(Comment comment, context) {
+    print_comment(comment.comment, context.CommentsStyle, context);
   }
 
   @override
   void visitAntlrOptionsExpression(AntlrOptionsExpression antltOptionsExpression, PetitPrinterContext context) {
-    print_list(antltOptionsExpression.expressions, context.OptionsListStyle, context);
+    var multipleOptions = (antltOptionsExpression.expressions?.length ?? 0) > 1;
+
+    print_list(
+        antltOptionsExpression.expressions,
+        multipleOptions ? context.MultipleOptionsListStyle : context.SingleOptionsListStyle,
+        context);
   }
 
   @override
@@ -42,39 +54,34 @@ class PetitPrinter extends PrinterBase<PetitPrinterContext> implements AntrlAstV
 
   @override
   void visitParenthesisExpression(ParenthesisExpression parenthesisNode, PetitPrinterContext context) {
-    print_item("(", null, context);
-    print_item(parenthesisNode.expression, null, context);
-    print_item(")", null, context);
+    print_items(["(", parenthesisNode.expression,")"], context);
   }
 
   @override
   void visitPrimitiveExpression(PrimitiveExpression primitiveNode, PetitPrinterContext context) {
-    print_item("ref(token,", null, context);
-    print_item(primitiveNode.value, null, context);
-    print_item(")", null, context);
+    print_items(["ref(token,", primitiveNode.value, ")"], context);
   }
 
   @override
   void visitUnaryExpression(UnaryExpression unaryNode, PetitPrinterContext context) {
+    var unaryAction = _getUnaryActionFromOperator(unaryNode);
+    
     if(unaryNode.target is BinaryExpression) {
-      print_item("(", null, context);
-      print_item(unaryNode.target, null, context);
-      print_item(")", null, context);
+      print_items(["(", unaryNode.target,").", unaryAction, "()"], context);
     } else {
-      print_item(unaryNode.target, null, context);
+      print_items([unaryNode.target, ".", unaryAction, "()"], context);
     }
+  }
 
+  _getUnaryActionFromOperator(UnaryExpression unaryNode) {
     switch(unaryNode.operator) {
       case UnaryOperator.OneOrMore:
-        print_item(".plus()", null, context);
-        break;
+        return "plus";
       case UnaryOperator.Optional:
-        print_item(".optional()", null, context);
-        break;
+        return "optional";
       case UnaryOperator.ZeroOrMore:
       default:
-        print_item(".star()", null, context);
-        break;
+        return "star";
     }
   }
   
@@ -87,8 +94,22 @@ class PetitPrinter extends PrinterBase<PetitPrinterContext> implements AntrlAstV
 }
 
 class PetitPrinterContext extends PrintContext {
-  final PrintListStyle OptionsListStyle = PrintListStyle(
-    separator: " | "
+
+  final PrintListStyle SingleOptionsListStyle = PrintListStyle(
+      separator: " | "
+  );
+
+  final PrintCommentsStyle CommentsStyle = PrintCommentsStyle(
+    beforeBlockComment: "/*",
+    afterBlockComment: "*/",
+    beforeLineComment: "//"
+  );
+  
+  final PrintListStyle MultipleOptionsListStyle = PrintListStyle(
+    separator: " | ",
+    before: "(",
+    after: ")",
+    printIfEmpty: false
   );
 
   final PrintListStyle SequenceListStyle = PrintListStyle(

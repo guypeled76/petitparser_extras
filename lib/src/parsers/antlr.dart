@@ -35,18 +35,29 @@ class AntlrParserDefinition extends AntlrGrammarDefinition with AstBuilder {
   }
 
   @override
+  Parser lineComment() {
+    // TODO: implement lineComment
+    return super.lineComment();
+  }
+
+  @override
   Parser ruleDefinition() {
-    return AntlrBuilder.as_antlrRuleDefinition(super.ruleDefinition());
+    return AntlrBuilder.as_ruleDefinition(super.ruleDefinition());
+  }
+
+  @override
+  Parser ruleFragment() {
+    return AntlrBuilder.as_fragment(super.ruleFragment());
   }
 
   @override
   Parser ruleOptions() {
-    return AntlrBuilder.as_antlrOptionsExpression(super.ruleOptions());
+    return AntlrBuilder.as_optionsExpression(super.ruleOptions());
   }
 
   @override
   Parser ruleExpressions() {
-    return AntlrBuilder.as_antrlSequenceExpression(super.ruleExpressions());
+    return AntlrBuilder.as_sequenceExpression(super.ruleExpressions());
   }
 
   @override
