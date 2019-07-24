@@ -19,20 +19,27 @@ class AntlrGrammarDefinition extends GrammarBaseDefinition {
   }
 
   Parser documentHeader() {
-    return ref(grammarDefinition) | ref(importDefinition) | ref(comment);
+    return ref(grammarDefinition) | ref(importDefinition) | ref(comment) | ref(sectionDefinition);
   }
 
   Parser documentContent() {
     return ref(ruleDefinition) | ref(comment);
   }
 
+  Parser sectionDefinition() {
+    return ref(AT) & ref(name) & ref(sectionContent);
+  }
+
+  Parser sectionContent() {
+    return ref(OPEN_BRACE) & ref(pattern, "^}").star() & ref(CLOSE_BRACE);
+  }
 
   Parser grammarDefinition() {
     return (ref(GRAMMAR) & ref(name) & ref(SEMI_COLON));
   }
 
   Parser importDefinition() {
-    return (ref(IMPORT) & ref(name) & ref(SEMI_COLON));
+    return (ref(IMPORT) & ref(name).separatedBy(ref(COMMA)) & ref(SEMI_COLON));
   }
 
   Parser comment() {

@@ -6,11 +6,11 @@ import 'dart:convert' show utf8;
 
 void main() async {
 
-  var resource = new Resource("package:petitparser_extras/resources/json.g4");
+  var resource = new Resource("package:petitparser_extras/resources/test.json");
   var resourceContent = await resource.readAsString(encoding: utf8);
 
   test('Test', () {
-    AntlrGrammar grammar = AntlrGrammar();
+    JsonGrammar grammar = JsonGrammar();
 
     var value = grammar.parse(resourceContent);
 
@@ -18,12 +18,12 @@ void main() async {
   });
 
   test('Test', () {
-    AntlrParser grammar = AntlrParser();
+    JsonParser grammar = JsonParser();
 
     var value = grammar.parse(resourceContent);
 
-    PetitPrinter petitPrinter = PetitPrinter();
-    var code =  petitPrinter.print(value.value, true);
+    JsonPrinter jsonPrinter = JsonPrinter();
+    var code =  jsonPrinter.print(value.value, true);
 
     print("result:\n${code}");
   });

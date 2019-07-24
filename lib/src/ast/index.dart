@@ -21,6 +21,7 @@ export 'graphql/index.dart';
 export 'antlr/index.dart';
 export 'comment.dart';
 export 'data.dart';
+export 'json/index.dart';
 
 export 'package:petitparser_extras/src/visitors/index.dart';
 export 'package:petitparser_extras/src/printers/printer.dart';
