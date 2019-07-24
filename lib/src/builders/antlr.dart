@@ -23,6 +23,15 @@ class AntlrBuilder {
     );
   }
 
+  static Parser as_rangeExpression(Parser parser) {
+    return parser.map((value) =>
+        AntlrRangeExpression(
+            AstBuilder.as_list_item(value,0),
+            AstBuilder.as_list_item(value,1)
+        )
+    );
+  }
+
   static Parser as_optionsExpression(Parser parser) {
     return parser.map((value) =>
         AntlrOptionsExpression(

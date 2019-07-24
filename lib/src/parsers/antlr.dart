@@ -61,6 +61,11 @@ class AntlrParserDefinition extends AntlrGrammarDefinition with AstBuilder {
   }
 
   @override
+  Parser rangeExpression() {
+    return AntlrBuilder.as_rangeExpression(super.rangeExpression());
+  }
+
+  @override
   Parser referenceExpression() {
     return AstBuilder.as_identifierExpression(super.referenceExpression());
   }

@@ -147,6 +147,10 @@ class AstBuilder {
     );
   }
 
+  static ItemType as_list_item<ItemType>(Object value, int position) {
+    return as_list<ItemType>(value)[position];
+  }
+
   static List<ItemType> as_list<ItemType>(Object value) {
     List<ItemType> items = [];
     if(value is List) {

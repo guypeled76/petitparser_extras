@@ -75,14 +75,15 @@ class AntlrGrammarDefinition extends GrammarBaseDefinition {
   
   Parser ruleExpression() {
     return (ref(zeroOrMoreExpression) |
+    ref(optionalOneOrMoreExpression) |
     ref(oneOrMoreExpression) |
     ref(optionalExpression) |
     ref(referenceExpression) |
-      ref(parenthesisExpression) |
-      ref(tokenExpression) |
+    ref(parenthesisExpression) |
+    ref(rangeExpression) |
+    ref(tokenExpression) |
     ref(patternExpression) |
-    ref(anyExpression) |
-    ref(rangeExpression)) & ref(comment).optional();
+    ref(anyExpression)) & ref(comment).optional();
   }
 
   Parser referenceExpression() {
@@ -91,6 +92,10 @@ class AntlrGrammarDefinition extends GrammarBaseDefinition {
 
   Parser optionalExpression() {
     return ref(unaryExpression) & ref(QUESTION_MARK);
+  }
+
+  Parser optionalOneOrMoreExpression() {
+    return ref(unaryExpression) & ref(PLUS) & ref(QUESTION_MARK);
   }
 
   Parser zeroOrMoreExpression() {

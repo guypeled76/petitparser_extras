@@ -102,6 +102,15 @@ class PetitPrinter extends PrinterBase<PetitPrinterContext> implements AntrlAstV
     print_item("ref(any)", null, context);
   }
 
+  @override
+  void visitAntlrRangeExpression(AntlrRangeExpression antlrRangeExpression, PetitPrinterContext context) {
+    print_item("ref(range,", null, context);
+    print_item(antlrRangeExpression.from, null, context);
+    print_item(",", null, context);
+    print_item(antlrRangeExpression.to, null, context);
+    print_item(")", null, context);
+  }
+
 
 }
 

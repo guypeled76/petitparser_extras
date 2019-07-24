@@ -21,4 +21,8 @@ class AntrlAstVisitor<ResultType, ContextType> {
   ResultType visitAntlrAnyExpression(AntlrAnyExpression antlrAnyExpression, ContextType context)  {
     return null;
   }
+
+  ResultType visitAntlrRangeExpression(AntlrRangeExpression antlrRangeExpression, ContextType context)  {
+    return null;
+  }
 }
