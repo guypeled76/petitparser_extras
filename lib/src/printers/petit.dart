@@ -5,6 +5,23 @@ import 'package:petitparser_extras/src/ast/index.dart';
 
 class PetitPrinter extends PrinterBase<PetitPrinterContext> implements AntrlAstVisitor<void, PetitPrinterContext>{
 
+  static final Map<String, String> tokens = {
+    "':'":'COLON',
+    "'{'":'OPEN_BRACE',
+    "'}'":'CLOSE_BRACE',
+    "','":'COMMA',
+    "'['":'OPEN_SQUARE',
+    "']'":'CLOSE_SQUARE',
+    "'\"'":'DOUBLE_QUOTE',
+    "'\''":'SINGLE_QUOTE',
+    "'null'":'NULL',
+    "'@'":'AT',
+    "'('":'OPEN_PARENTHESIS',
+    "')'":'CLOSE_PARENTHESIS',
+    "'\$'":'DOLLAR',
+    "'='":'EQUAL',
+    "'!'":'EXCLAMATION',
+  };
 
 
   @override
@@ -64,6 +81,14 @@ class PetitPrinter extends PrinterBase<PetitPrinterContext> implements AntrlAstV
 
   @override
   void visitPrimitiveExpression(PrimitiveExpression primitiveNode, PetitPrinterContext context) {
+
+    if (primitiveNode.value is String) {
+      var token = tokens[primitiveNode.value];
+      if(token != null) {
+        print_items(["ref(", token, ")"], context);
+        return;
+      }
+    }
     print_items(["ref(token,", primitiveNode.value, ")"], context);
   }
 
