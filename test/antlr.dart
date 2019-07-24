@@ -6,7 +6,7 @@ import 'dart:convert' show utf8;
 
 void main() async {
 
-  var resource = new Resource("package:petitparser_extras/resources/graphql.g4");
+  var resource = new Resource("package:petitparser_extras/resources/test.g4");
   var resourceContent = await resource.readAsString(encoding: utf8);
 
   test('Test', () {

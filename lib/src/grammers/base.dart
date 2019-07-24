@@ -14,25 +14,30 @@ abstract class GrammarBaseDefinition extends GrammarDefinition {
   }
 
   Parser DOUBLE_QUOTE_STRING() {
-    return (ref(DOUBLE_QUOTE) & (ref(pattern, "^\"") | ref(ESC)).star() & ref(DOUBLE_QUOTE))
-        .flatten();
+    return (ref(char, '"') & ref(STRING_CONTENT,'"') & ref(char, '"'))
+        .trim().flatten();
   }
 
   Parser SINGLE_QUOTE_STRING() {
-    return (ref(SINGLE_QUOTE) & (ref(pattern, "^\'") | ref(ESC)).star() & ref(SINGLE_QUOTE))
-        .flatten();
+    return (ref(char, "'") & ref(STRING_CONTENT,"'") & ref(char, "'"))
+        .trim().flatten();
   }
+
+  Parser STRING_CONTENT(String QUOTE_CHAR) {
+    return (ref(pattern, "^\\"+QUOTE_CHAR) | ref(ESC)).star();
+  }
+
 
   Parser BOOLEAN() {
     return ref(token, "true") | ref(token, "false");
   }
 
   Parser ESC() {
-    return ref(BACKSLASH) & (ref(UNICODE) | ref(ESC_CHAR));
+    return ref(char, "\\") & (ref(UNICODE) | ref(ESC_CHAR));
   }
 
   Parser ESC_CHAR() {
-    return ref(pattern, "bfnrt\"\'\\/");
+    return ref(pattern, "bfnrt\"'\\/");
   }
 
   Parser UNICODE() {

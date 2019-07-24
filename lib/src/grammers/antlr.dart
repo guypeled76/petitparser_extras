@@ -36,15 +36,20 @@ class AntlrGrammarDefinition extends GrammarBaseDefinition {
   }
 
   Parser comment() {
-    return (ref(string, "//") & ref(lineComment) & ref(char, "\n")).flatten();
+    return (ref(string, "//") & ref(lineComment) & ref(char, "\n")).trim() |
+    (ref(string,"/*") & ref(blockComment) & ref(string, "*/")).trim();
   }
   
   Parser lineComment() {
-    return  ref(pattern, "^\n").star().flatten(); 
+    return  ref(char, "\n").neg().star().flatten();
+  }
+
+  Parser blockComment() {
+    return ref(string, "*/").neg().star().flatten();
   }
 
   Parser ruleDefinition() {
-    return ref(ruleFragment).optional() & ref(name) & ref(COLON) & ref(ruleOptions) & ref(ruleChannel).optional() & ref(SEMI_COLON);
+    return ref(ruleFragment).optional() & ref(name) & ref(COLON) & ref(ruleOptions).optional() & ref(ruleChannel).optional() & ref(SEMI_COLON);
   }
 
   Parser ruleChannel() {
@@ -61,11 +66,15 @@ class AntlrGrammarDefinition extends GrammarBaseDefinition {
   }
 
   Parser ruleExpressions() {
-    return ref(ruleExpression).plus();
+    return ref(ruleExpression).plus() & ref(ruleName).optional();
+  }
+
+  Parser ruleName() {
+    return ref(token, "#") & ref(name);
   }
   
   Parser ruleExpression() {
-    return ref(zeroOrMoreExpression) |
+    return (ref(zeroOrMoreExpression) |
     ref(oneOrMoreExpression) |
     ref(optionalExpression) |
     ref(referenceExpression) |
@@ -73,7 +82,7 @@ class AntlrGrammarDefinition extends GrammarBaseDefinition {
       ref(tokenExpression) |
     ref(patternExpression) |
     ref(anyExpression) |
-    ref(rangeExpression);
+    ref(rangeExpression)) & ref(comment).optional();
   }
 
   Parser referenceExpression() {
