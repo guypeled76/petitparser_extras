@@ -1,5 +1,5 @@
 export 'graphql.dart';
 export 'prometheus.dart';
 export 'antlr.dart';
-export 'graphschema.dart';
+export 'graphqlsdl.dart';
 export 'json.dart';

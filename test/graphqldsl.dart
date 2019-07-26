@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 
 void main() {
   test('Test', () {
-    GraphSchemaGrammar parser = GraphSchemaGrammar();
+    GraphQLSDLGrammar parser = GraphQLSDLGrammar();
 
     var test1 = parser.parse("""
 
@@ -15,7 +15,7 @@ type User {
 
     """);
 
-    var value = test1.value;
-    print("result:\n${value}");
+
+    print("result:\n${test1}");
   });
 }

@@ -29,8 +29,34 @@ class PetitPrinter extends PrinterBase<PetitPrinterContext> implements AntrlAstV
     return PetitPrinterContext();
   }
 
+  /*import 'package:petitparser/petitparser.dart';
+
+import 'base.dart';
+
+class AntlrGrammar extends GrammarParser {
+  AntlrGrammar() : super(const AntlrGrammarDefinition());
+}
+
+class AntlrGrammarDefinition extends GrammarBaseDefinition {
+  const AntlrGrammarDefinition();
+*/
+
   void visitCompilationUnit(CompilationUnit compilationUnit, PetitPrinterContext context) {
+    var parserName = "Generated";
+
+    print_items(["""
+import 'package:petitparser/petitparser.dart';
+
+class ${parserName}Grammar extends GrammarParser {
+  ${parserName}Grammar() : super(const ${parserName}GrammarDefinition());
+}
+
+class ${parserName}GrammarDefinition extends GrammarBaseDefinition {
+  const ${parserName}GrammarDefinition();
+
+"""], context);
     print_list(compilationUnit.children, null, context);
+    print_item("}", null, context);
   }
 
   @override
@@ -40,7 +66,7 @@ class PetitPrinter extends PrinterBase<PetitPrinterContext> implements AntrlAstV
       antlrRuleDefinition.name,
       "() {\n\treturn ",
       antlrRuleDefinition.expression,
-      ";\n};\n\n"
+      ";\n}\n\n"
     ], context);
   }
 
