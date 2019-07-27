@@ -10,11 +10,13 @@ void main() {
 
     var test1 = parser.parse(""" {
   me {
-    name3333(fff:"33") {
-      id 
+    name3333(fff:"33", ffk:3) {
+      id
+      fff
     }
     fff {
-      fff3
+      fff3,
+      cc
     }
   }
 }

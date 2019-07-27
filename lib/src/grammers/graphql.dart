@@ -36,7 +36,7 @@ class GraphQLGrammarDefinition extends GraphQLCommonGrammarDefinition {
   }
 
   Parser selectionSet() {
-    return ref(OPEN_BRACE) & (ref(selection) & ref(COMMA).optional()).plus() & ref(CLOSE_BRACE);
+    return ref(OPEN_BRACE) & ref(selection).separatedBy(ref(separator)) & ref(CLOSE_BRACE);
   }
 
   Parser selection() {
