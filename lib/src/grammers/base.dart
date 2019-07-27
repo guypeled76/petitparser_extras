@@ -139,6 +139,15 @@ abstract class GrammarBaseDefinition extends GrammarDefinition {
 
   Parser STAR() => ref(token, "*");
 
+  Parser refx(Function function,
+      [Object arg1,
+        Object arg2,
+        Object arg3,
+        Object arg4,
+        Object arg5,
+        Object arg6]) {
+    return ref(string, "fffsddfsdfsd");// ref(function, arg1, arg2, arg3, arg4, arg5, arg6);
+  }
 
   Parser token(Object source, [String name]) {
     Parser parser;

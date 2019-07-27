@@ -75,7 +75,7 @@ abstract class GraphQLCommonGrammarDefinition extends GrammarBaseDefinition {
   }
 
   Parser name() {
-    return (ref(baseName) | ref(BOOLEAN) | ref(NULL) | ref(ON_KEYWORD));
+    return (ref(baseName) | ref(BOOLEAN) | ref(NULL) | ref(ON_KEYWORD)).flatten();
   }
 
   Parser value() {
@@ -111,7 +111,7 @@ abstract class GraphQLCommonGrammarDefinition extends GrammarBaseDefinition {
   }
 
   Parser typeSystemDefinition() {
-    return (ref(description).optional() & ref(schemaDefinition) | ref(typeDefinition) | ref(typeExtension) | ref(directiveDefinition));
+    return ref(schemaDefinition) | ref(typeDefinition) | ref(typeExtension) | ref(directiveDefinition);
   }
 
   Parser schemaDefinition() {
@@ -123,7 +123,7 @@ abstract class GraphQLCommonGrammarDefinition extends GrammarBaseDefinition {
   }
 
   Parser typeDefinition() {
-    return (ref(scalarTypeDefinition) | ref(objectTypeDefinition) | ref(interfaceTypeDefinition) | ref(unionTypeDefinition) | ref(enumTypeDefinition) | ref(inputObjectTypeDefinition));
+    return ref(scalarTypeDefinition) | ref(objectTypeDefinition) | ref(interfaceTypeDefinition) | ref(unionTypeDefinition) | ref(enumTypeDefinition) | ref(inputObjectTypeDefinition);
   }
 
   Parser typeExtension() {
@@ -151,15 +151,19 @@ abstract class GraphQLCommonGrammarDefinition extends GrammarBaseDefinition {
   }
 
   Parser implementsInterfaces() {
-    return (ref(IMPLEMENTS) & ref(token,'&').optional() & ref(typeName).plus() | ref(implementsInterfaces) & ref(token,'&') & ref(typeName));
+    return ref(IMPLEMENTS) & ref(AMP).optional() & ref(typeName).separatedBy(ref(AMP));
   }
 
   Parser fieldsDefinition() {
-    return ref(OPEN_BRACE) & ref(fieldDefinition).star() & ref(CLOSE_BRACE);
+    return ref(OPEN_BRACE) & ref(fieldDefinition).separatedBy(ref(separator)) & ref(CLOSE_BRACE);
   }
 
   Parser extensionFieldsDefinition() {
-    return ref(OPEN_BRACE) & ref(fieldDefinition).plus() & ref(CLOSE_BRACE);
+    return ref(OPEN_BRACE) & ref(fieldDefinition).separatedBy(ref(separator)) & ref(CLOSE_BRACE);
+  }
+
+  Parser separator() {
+    return ref(COMMA).optional().trim();
   }
 
   Parser fieldDefinition() {

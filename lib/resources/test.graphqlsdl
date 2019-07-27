@@ -1,0 +1,5 @@
+
+type CustomType {
+  circular: TypeName
+  circular1: TypeName
+}
