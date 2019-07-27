@@ -95,7 +95,7 @@ abstract class GraphQLCommonGrammarDefinition extends GrammarBaseDefinition {
   }
 
   Parser type() {
-    return (ref(typeName) | ref(listType) | ref(nonNullType));
+    return (ref(typeName) | ref(listType)) & ref(EXCLAMATION).optional();
   }
 
   Parser typeName() {
@@ -106,12 +106,8 @@ abstract class GraphQLCommonGrammarDefinition extends GrammarBaseDefinition {
     return ref(OPEN_SQUARE) & ref(type) & ref(CLOSE_SQUARE);
   }
 
-  Parser nonNullType() {
-    return (ref(typeName) & ref(EXCLAMATION) | ref(listType) & ref(EXCLAMATION));
-  }
-
   Parser typeSystemDefinition() {
-    return ref(schemaDefinition) | ref(typeDefinition) | ref(typeExtension) | ref(directiveDefinition);
+    return (ref(schemaDefinition) | ref(typeDefinition) | ref(typeExtension) | ref(directiveDefinition)).trim();
   }
 
   Parser schemaDefinition() {
@@ -239,7 +235,7 @@ abstract class GraphQLCommonGrammarDefinition extends GrammarBaseDefinition {
   }
 
   Parser directiveDefinition() {
-    return ref(description).optional() & ref(DIRECTIVE) & ref(AT) & ref(name) & ref(argumentsDefinition).optional() & ref(token,'on') & ref(directiveLocations);
+    return ref(description).optional() & ref(DIRECTIVE) & ref(AT) & ref(name) & ref(argumentsDefinition).optional() & ref(ON) & ref(directiveLocations);
   }
 
   Parser directiveLocation() {
@@ -247,7 +243,7 @@ abstract class GraphQLCommonGrammarDefinition extends GrammarBaseDefinition {
   }
 
   Parser directiveLocations() {
-    return (ref(directiveLocation) | ref(directiveLocations) & ref(token,'|') & ref(directiveLocation));
+    return ref(directiveLocation).separatedBy(ref(PIPE));
   }
 
   Parser FRAGMENT() {
