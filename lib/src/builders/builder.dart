@@ -5,6 +5,28 @@ import 'package:petitparser_extras/petitparser_extras.dart';
 
 class AstBuilder {
 
+  static Parser as_fieldDefinition(Parser parser) {
+    return parser.map((value) =>
+        FieldDefinition(
+            AstBuilder.as_name(value),
+            AstBuilder.as_value(value),
+            AstBuilder.as_list(value)
+        )
+    );
+  }
+
+
+  static Parser as_typeDefinition(Parser parser, TypeReference baseType, {List<TypeReference> implementedTypes}) {
+    return parser.map((value) =>
+        TypeDefinition(
+            AstBuilder.as_name(value),
+            baseType,
+            AstBuilder.as_list(value),
+            implementedTypes: implementedTypes
+        )
+    );
+  }
+
   static Parser as_compilationNode(Parser parser) {
     return parser.map((value) =>
         CompilationUnit(

@@ -167,7 +167,7 @@ abstract class GraphQLCommonGrammarDefinition extends GrammarBaseDefinition {
   }
 
   Parser argumentsDefinition() {
-    return ref(OPEN_PARENTHESIS) & ref(inputValueDefinition).plus() & ref(CLOSE_PARENTHESIS);
+    return ref(OPEN_PARENTHESIS) & ref(inputValueDefinition).separatedBy(ref(separator)) & ref(CLOSE_PARENTHESIS);
   }
 
   Parser inputValueDefinition() {
@@ -207,7 +207,7 @@ abstract class GraphQLCommonGrammarDefinition extends GrammarBaseDefinition {
   }
 
   Parser enumValueDefinitions() {
-    return ref(OPEN_BRACE) & ref(enumValueDefinition).star() & ref(CLOSE_BRACE);
+    return ref(OPEN_BRACE) & ref(enumValueDefinition).separatedBy(ref(separator)) & ref(CLOSE_BRACE);
   }
 
   Parser extensionEnumValueDefinitions() {
@@ -227,7 +227,7 @@ abstract class GraphQLCommonGrammarDefinition extends GrammarBaseDefinition {
   }
 
   Parser inputObjectValueDefinitions() {
-    return ref(OPEN_BRACE) & ref(inputValueDefinition).star() & ref(CLOSE_BRACE);
+    return ref(OPEN_BRACE) & ref(inputValueDefinition).separatedBy(ref(separator)) & ref(CLOSE_BRACE);
   }
 
   Parser extensionInputObjectValueDefinitions() {

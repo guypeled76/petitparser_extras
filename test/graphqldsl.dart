@@ -7,7 +7,7 @@ import 'package:test/test.dart';
 
 void main() async {
 
-  var resource = new Resource("package:petitparser_extras/resources/schema.graphql");
+  var resource = new Resource("package:petitparser_extras/resources/schema_test.graphql");
   var resourceContent = await resource.readAsString(encoding: utf8);
   test('Test', () {
     GraphQLSDLGrammar parser = GraphQLSDLGrammar();

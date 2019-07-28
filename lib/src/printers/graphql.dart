@@ -3,7 +3,7 @@
 
 import 'package:petitparser_extras/src/ast/index.dart';
 
-class GraphQLPrinter extends PrinterBase<GraphQLPrinterContext> implements GqlAstVisitor<void, GraphQLPrinterContext> {
+class GraphQLPrinter extends PrinterBase<GraphQLPrinterContext> {
 
 
   void visitCompilationUnit(CompilationUnit compilationUnit, GraphQLPrinterContext context) {
@@ -15,7 +15,7 @@ class GraphQLPrinter extends PrinterBase<GraphQLPrinterContext> implements GqlAs
     print_item(argumentNode.value, context.ArgumentValueStyle, context);
   }
 
-  void visitGqlFieldDefinition(GqlFieldDefinition fieldNode, GraphQLPrinterContext context) {
+  void visitFieldDefinition(FieldDefinition fieldNode, GraphQLPrinterContext context) {
     print_item(fieldNode.name, fieldNode.arguments?.isEmpty ?? true ? context.SpaceAfterStyle : null, context);
     print_list(fieldNode.arguments, context.FieldArgumentsStyle, context);
     print_list(fieldNode.fields, context.FieldsStyle, context);
@@ -25,8 +25,8 @@ class GraphQLPrinter extends PrinterBase<GraphQLPrinterContext> implements GqlAs
     this.print_item(valueNode.toString(), null, context);
   }
 
-  void visitGqlOperationNode(GqlOperationDefinition operationNode, GraphQLPrinterContext context) {
-    this.print_item(operationNode.typeName, context.SpaceAfterStyle, context);
+  void visitTypeDefinitionNode(TypeDefinition operationNode, GraphQLPrinterContext context) {
+    this.print_item(operationNode.baseType, context.SpaceAfterStyle, context);
     this.print_item(operationNode.name, context.SpaceAfterStyle, context);
     this.print_list(operationNode.fields, context.FieldsStyle, context);
   }

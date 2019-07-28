@@ -3,7 +3,7 @@
 
 import 'package:petitparser_extras/src/ast/index.dart';
 
-class GraphSchemaPrinter extends PrinterBase<GraphSchemaPrinterContext> implements GqlAstVisitor<void, GraphSchemaPrinterContext>  {
+class GraphSchemaPrinter extends PrinterBase<GraphSchemaPrinterContext> {
 
 
   void visitCompilationUnit(CompilationUnit compilationUnit, GraphSchemaPrinterContext context) {
@@ -15,7 +15,7 @@ class GraphSchemaPrinter extends PrinterBase<GraphSchemaPrinterContext> implemen
     print_item(argumentNode.value, context.ArgumentValueStyle, context);
   }
 
-  void visitGqlFieldDefinition(GqlFieldDefinition fieldNode, GraphSchemaPrinterContext context) {
+  void visitFieldDefinition(FieldDefinition fieldNode, GraphSchemaPrinterContext context) {
     print_item(fieldNode.name, fieldNode.arguments?.isEmpty ?? true ? context.SpaceAfterStyle : null, context);
     print_list(fieldNode.arguments, context.FieldArgumentsStyle, context);
     print_list(fieldNode.fields, context.FieldsStyle, context);
@@ -25,10 +25,10 @@ class GraphSchemaPrinter extends PrinterBase<GraphSchemaPrinterContext> implemen
     this.print_item(valueNode.toString(), null, context);
   }
 
-  void visitGqlOperationNode(GqlOperationDefinition operationNode, GraphSchemaPrinterContext context) {
-    this.print_item(operationNode.typeName, context.SpaceAfterStyle, context);
-    this.print_item(operationNode.name, context.SpaceAfterStyle, context);
-    this.print_list(operationNode.fields, context.FieldsStyle, context);
+  void visitTypeDefinitionNode(TypeDefinition typeDefinition, GraphSchemaPrinterContext context) {
+    this.print_item(typeDefinition.baseType, context.SpaceAfterStyle, context);
+    this.print_item(typeDefinition.name, context.SpaceAfterStyle, context);
+    this.print_list(typeDefinition.fields, context.FieldsStyle, context);
   }
 
   void visitVariableDefinition(VariableDefinition variableNode, GraphSchemaPrinterContext context) {
