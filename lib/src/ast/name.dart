@@ -13,4 +13,10 @@ class NameNode extends AstNode {
   ResultType visit<ResultType, ContextType>(AstVisitor<ResultType, ContextType> visitor, ContextType context) {
     return visitor.visitNameNode(this, context);
   }
+
+  @override
+  String toNameString() {
+    return this.name;
+  }
+
 }

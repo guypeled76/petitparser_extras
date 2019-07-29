@@ -20,6 +20,11 @@ class TypeDefinition extends Definition implements ContainerNode, TypeReference 
     return visitor.visitTypeDefinition(this, context);
   }
 
+  @override
+  String toAttributesString() {
+    return super.toAttributesString() + toAttributeString("type", baseType?.toNameString() ?? "?");
+  }
+
 }
 
 class TypeReference extends AstNode {
@@ -31,6 +36,11 @@ class TypeReference extends AstNode {
   @override
   ResultType visit<ResultType, ContextType>(AstVisitor<ResultType, ContextType> visitor, ContextType context) {
     return visitor.visitTypeReference(this, context);
+  }
+
+  @override
+  String toNameString() {
+    return this.name;
   }
 }
 

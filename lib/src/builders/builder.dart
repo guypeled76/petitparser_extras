@@ -15,6 +15,13 @@ class AstBuilder {
     );
   }
 
+  static Parser as_typeReference(Parser parser) {
+    return parser.map((value) =>
+        TypeReference(
+            AstBuilder.as_name(value)
+        )
+    );
+  }
 
   static Parser as_typeDefinition(Parser parser, TypeReference baseType, {List<TypeReference> implementedTypes}) {
     return parser.map((value) =>
@@ -226,6 +233,8 @@ class AstBuilder {
       }
     }
   }
+
+
 
 
 }

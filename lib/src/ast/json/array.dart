@@ -1,6 +1,6 @@
 import 'package:petitparser_extras/petitparser_extras.dart';
 
-class JsonArray implements Expression {
+class JsonArray extends Expression {
 
 
   final List<Expression> items;

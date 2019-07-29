@@ -20,6 +20,10 @@ class FieldDefinition extends Definition implements ContainerNode {
     return visitor.visitFieldDefinition(this, context);
   }
 
+  String toAttributesString() {
+    return super.toAttributesString() + toAttributeString("type", typeReference?.toNameString() ?? "?");
+  }
+
 
   List<FieldDefinition> get fields {
     if(typeReference is TypeDefinition) {

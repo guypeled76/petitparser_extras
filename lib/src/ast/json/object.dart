@@ -1,6 +1,6 @@
 import 'package:petitparser_extras/petitparser_extras.dart';
 
-class JsonObject implements Expression {
+class JsonObject extends Expression {
 
 
   final List<JsonProperty> properties;

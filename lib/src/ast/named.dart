@@ -8,4 +8,9 @@ abstract class NamedNode extends AstNode {
 
   NamedNode(this.name);
 
+  @override
+  String toNameString() {
+    return this.name;
+  }
+
 }
