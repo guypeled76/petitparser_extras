@@ -23,6 +23,14 @@ class AstBuilder {
     );
   }
 
+  static Parser as_arrayTypeReference(Parser parser) {
+    return parser.map((value) =>
+        ArrayTypeReference(
+            AstBuilder.as_value(value)
+        )
+    );
+  }
+
   static Parser as_typeDefinition(Parser parser, TypeReference baseType, {List<TypeReference> implementedTypes}) {
     return parser.map((value) =>
         TypeDefinition(
@@ -233,6 +241,8 @@ class AstBuilder {
       }
     }
   }
+
+
 
 
 

@@ -25,6 +25,15 @@ class TypeDefinition extends Definition implements ContainerNode, TypeReference 
     return super.toAttributesString() + toAttributeString("type", baseType?.toNameString() ?? "?");
   }
 
+  @override
+  bool get isArray => false;
+
+  @override
+  bool get isNotNull => false;
+
+  @override
+  TypeReference get element => null;
+
 }
 
 class TypeReference extends AstNode {
@@ -38,9 +47,43 @@ class TypeReference extends AstNode {
     return visitor.visitTypeReference(this, context);
   }
 
+  TypeReference get element => null;
+
+  bool get isArray => false;
+
+  bool get isNotNull => false;
+
   @override
   String toNameString() {
     return this.name;
   }
+}
+
+class ArrayTypeReference extends TypeReference {
+
+  final TypeReference element;
+
+  ArrayTypeReference(this.element) : super("[${element?.name??'?'}]");
+
+  @override
+  bool get isArray => true;
+
+  @override
+  bool get isNotNull => false;
+
+}
+
+class NotNullReference extends TypeReference {
+
+  final TypeReference element;
+
+  NotNullReference(this.element) : super("${element?.name??'?'}!");
+
+  @override
+  bool get isArray => element?.isArray ?? false;
+
+  @override
+  bool get isNotNull => true;
+
 }
 

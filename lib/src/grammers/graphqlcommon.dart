@@ -95,7 +95,15 @@ abstract class GraphQLCommonGrammarDefinition extends GrammarBaseDefinition {
   }
 
   Parser type() {
-    return (ref(typeName) | ref(listType)) & ref(EXCLAMATION).optional();
+    return ref(typeElement) & ref(notNullTypeModifier).optional();
+  }
+
+  Parser notNullTypeModifier() {
+    return ref(EXCLAMATION);
+  }
+  
+  Parser typeElement() {
+    return ref(typeName) | ref(listType);
   }
 
   Parser typeName() {
