@@ -17,6 +17,18 @@ abstract class GraphQLCommonParserDefinition extends GraphQLCommonGrammarDefinit
   }
 
   @override
+  Parser argument() {
+    return AstBuilder.as_argumentDefinition(super.argument());
+  }
+
+  @override
+  Parser inputValueDefinition() {
+    return AstBuilder.as_fieldDefinition(super.inputValueDefinition());
+  }
+
+
+
+  @override
   Parser operationDefinition() {
     return AstBuilder.as_typeDefinition(super.operationDefinition(), TypeReference("operation"));
   }
@@ -80,10 +92,7 @@ abstract class GraphQLCommonParserDefinition extends GraphQLCommonGrammarDefinit
   }
   
 
-  @override
-  Parser inputValueDefinition() {
-    return AstBuilder.as_fieldDefinition(super.inputValueDefinition());
-  }
+
 
   @override
   Parser type() {

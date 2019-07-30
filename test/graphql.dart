@@ -8,22 +8,14 @@ void main() {
   test('Test', () {
     GraphQLParser parser = GraphQLParser();
 
-    var test1 = parser.parse(""" query {
-  currentUser {
+    var test1 = parser.parse(""" mutation {
+  createHashtag(name:"raw") {
     id
-    name
-  } 
-  hashtags {
-    id,
-    name
-  },
-  users {
-    id,
-    name
   }
 }
     """);
 
     print("result:\n${test1}");
+
   });
 }

@@ -10,7 +10,7 @@ class AstBuilder {
         FieldDefinition(
             AstBuilder.as_name(value),
             AstBuilder.as_value(value),
-            AstBuilder.as_list(value)
+            arguments: AstBuilder.as_list(value)
         )
     );
   }

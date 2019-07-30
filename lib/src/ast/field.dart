@@ -10,7 +10,7 @@ class FieldDefinition extends Definition implements ContainerNode {
 
   final TypeReference typeReference;
 
-  FieldDefinition(String name, this.typeReference, [this.directives = const [], this.arguments = const []]) : super(name);
+  FieldDefinition(String name, this.typeReference, {this.directives = const [], this.arguments = const []}) : super(name);
 
   @override
   List<AstNode> get children => <AstNode>[typeReference, ...directives];
