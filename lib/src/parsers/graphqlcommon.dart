@@ -1,14 +1,9 @@
 import 'package:petitparser/petitparser.dart';
 import 'package:petitparser_extras/petitparser_extras.dart';
 
-class GraphQLCommonParserDefinition extends GraphQLSDLGrammarDefinition {
+abstract class GraphQLCommonParserDefinition extends GraphQLCommonGrammarDefinition {
   const GraphQLCommonParserDefinition();
 
-
-  @override
-  Parser start() {
-    return AstBuilder.as_compilationNode(super.start());
-  }
 
   @override
   Parser schemaDefinition() {
@@ -19,6 +14,16 @@ class GraphQLCommonParserDefinition extends GraphQLSDLGrammarDefinition {
   @override
   Parser typeDefinition() {
     return super.typeDefinition();
+  }
+
+  @override
+  Parser operationDefinition() {
+    return AstBuilder.as_typeDefinition(super.operationDefinition(), TypeReference("operation"));
+  }
+
+  @override
+  Parser operationTypeDefinition() {
+    return AstBuilder.as_typeDefinition(super.operationTypeDefinition(), TypeReference("operation"));
   }
 
   @override
@@ -68,6 +73,12 @@ class GraphQLCommonParserDefinition extends GraphQLSDLGrammarDefinition {
   Parser fieldDefinition() {
     return AstBuilder.as_fieldDefinition(super.fieldDefinition());
   }
+
+  @override
+  Parser field() {
+    return GrapgQLBuilder.as_fieldDefinitionWithAnonymousType(super.field());
+  }
+  
 
   @override
   Parser inputValueDefinition() {

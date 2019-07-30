@@ -6,13 +6,13 @@ import 'package:test/test.dart';
 
 void main() {
   test('Test', () {
-    GraphQLGrammar parser = GraphQLGrammar();
+    GraphQLParser parser = GraphQLParser();
 
     var test1 = parser.parse(""" query {
   currentUser {
     id
     name
-  } , 
+  } 
   hashtags {
     id,
     name

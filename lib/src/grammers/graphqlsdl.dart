@@ -11,12 +11,10 @@ class GraphQLSDLGrammarDefinition extends GraphQLCommonGrammarDefinition {
 
   @override
   Parser start() {
-    return ref(document).end();
+    return ref(schemaDocument).end();
   }
 
-  Parser document() {
-    return ref(typeSystemDefinition).star();
-  }
+
 
 
 }

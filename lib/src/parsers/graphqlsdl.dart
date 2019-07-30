@@ -10,4 +10,9 @@ class GraphSDLParser extends GrammarParser  {
 class GraphSDLParserDefinition extends GraphQLCommonParserDefinition {
   const GraphSDLParserDefinition();
 
+  @override
+  Parser start() {
+    return AstBuilder.as_compilationNode(super.schemaDocument());
+  }
+
 }

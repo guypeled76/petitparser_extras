@@ -11,6 +11,10 @@ class GraphQLParser extends GrammarParser  {
 class GraphQLParserDefinition extends GraphQLCommonParserDefinition  {
   const GraphQLParserDefinition();
 
+  @override
+  Parser start() {
+    return AstBuilder.as_compilationNode(super.queryDocument());
+  }
 
 
 

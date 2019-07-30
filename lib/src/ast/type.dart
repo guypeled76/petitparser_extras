@@ -32,7 +32,19 @@ class TypeDefinition extends Definition implements ContainerNode, TypeReference 
   bool get isNotNull => false;
 
   @override
+  bool get isAnonymous => false;
+
+  @override
   TypeReference get element => null;
+
+}
+
+class AnonymousTypeReference extends TypeDefinition {
+
+  AnonymousTypeReference(List<FieldDefinition> fields) : super("?", null, fields);
+
+  @override
+  bool get isAnonymous => true;
 
 }
 
@@ -52,6 +64,8 @@ class TypeReference extends AstNode {
   bool get isArray => false;
 
   bool get isNotNull => false;
+
+  bool get isAnonymous => false;
 
   @override
   String toNameString() {

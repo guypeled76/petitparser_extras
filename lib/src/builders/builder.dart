@@ -242,6 +242,10 @@ class AstBuilder {
     }
   }
 
+  static TypeReference as_anonymousTypeReference(Object value) {
+    return AnonymousTypeReference(as_list(value));
+  }
+
 
 
 
