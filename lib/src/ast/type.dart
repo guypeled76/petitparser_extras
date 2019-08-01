@@ -37,6 +37,23 @@ class TypeDefinition extends Definition implements ContainerNode, TypeReference 
   @override
   TypeReference get element => null;
 
+  @override
+  bool get isUnknown => false;
+
+  @override
+  AstNode transform(AstTransformer transformer, AstTransformerContext context) {
+
+    context = transformer.createContext(context, this);
+
+    return TypeDefinition(
+        name,
+        transformer.transformNode(this.baseType, context),
+        transformer.transformNodes(this.fields, context),
+        implementedTypes: transformer.transformNodes(this.implementedTypes, context)
+    );
+
+  }
+
 }
 
 class AnonymousTypeReference extends TypeDefinition {
@@ -45,6 +62,13 @@ class AnonymousTypeReference extends TypeDefinition {
 
   @override
   bool get isAnonymous => true;
+
+  @override
+  AstNode transform(AstTransformer transformer, AstTransformerContext context) {
+    return AnonymousTypeReference(
+        transformer.transformNodes(this.fields, transformer.createContext(context, this))
+    );
+  }
 
 }
 
@@ -67,9 +91,28 @@ class TypeReference extends AstNode {
 
   bool get isAnonymous => false;
 
+  bool get isUnknown => false;
+
   @override
   String toNameString() {
     return this.name;
+  }
+
+  @override
+  AstNode transform(AstTransformer transformer, AstTransformerContext context) {
+    return this;
+  }
+}
+
+class UnknownTypeReference extends TypeReference {
+  UnknownTypeReference() : super("?");
+
+  @override
+  bool get isUnknown => true;
+
+  @override
+  AstNode transform(AstTransformer transformer, AstTransformerContext context) {
+    return this;
   }
 }
 
@@ -85,6 +128,13 @@ class ArrayTypeReference extends TypeReference {
   @override
   bool get isNotNull => false;
 
+  @override
+  AstNode transform(AstTransformer transformer, AstTransformerContext context) {
+    return ArrayTypeReference(
+        transformer.transformNode(this.element, transformer.createContext(context, this))
+    );
+  }
+
 }
 
 class NotNullReference extends TypeReference {
@@ -98,6 +148,13 @@ class NotNullReference extends TypeReference {
 
   @override
   bool get isNotNull => true;
+
+  @override
+  AstNode transform(AstTransformer transformer, AstTransformerContext context) {
+    return NotNullReference(
+        transformer.transformNode(this.element, transformer.createContext(context, this))
+    );
+  }
 
 }
 

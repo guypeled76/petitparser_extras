@@ -1,6 +1,8 @@
 
 
 
+import 'package:petitparser_extras/petitparser_extras.dart';
+
 import 'index.dart';
 
 class ParenthesisExpression extends Expression  {
@@ -15,5 +17,9 @@ class ParenthesisExpression extends Expression  {
   }
 
 
+  @override
+  AstNode transform(AstTransformer transformer, AstTransformerContext context) {
+    return ParenthesisExpression(transformer.transformNode(this.expression, transformer.createContext(context, this)));
+  }
 
 }

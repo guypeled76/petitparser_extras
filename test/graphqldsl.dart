@@ -10,7 +10,7 @@ void main() async {
   var resource = new Resource("package:petitparser_extras/resources/schema_test.graphql");
   var resourceContent = await resource.readAsString(encoding: utf8);
   test('Test', () {
-    GraphSDLParser parser = GraphSDLParser();
+    GraphQLSDLParser parser = GraphQLSDLParser();
 
     var test1 = parser.parse(resourceContent);
 

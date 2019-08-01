@@ -15,4 +15,9 @@ class Data<DataType> extends AstNode {
   ResultType visit<ResultType, ContextType>(AstVisitor<ResultType, ContextType> visitor, ContextType context) {
     return visitor.visitData(this, context);
   }
+
+  @override
+  AstNode transform(AstTransformer transformer, AstTransformerContext context) {
+    return this;
+  }
 }

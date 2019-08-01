@@ -1,4 +1,6 @@
 
+import 'package:petitparser_extras/petitparser_extras.dart';
+
 import 'index.dart';
 
 class AttributeDefinition extends Definition implements Expression  {
@@ -13,5 +15,9 @@ class AttributeDefinition extends Definition implements Expression  {
   }
 
 
+  @override
+  AstNode transform(AstTransformer transformer, AstTransformerContext context) {
+    return AttributeDefinition(name, transformer.transformNode(this.value, transformer.createContext(context, this)));
+  }
 
 }

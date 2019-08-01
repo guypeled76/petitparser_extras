@@ -19,4 +19,9 @@ class AntlrPatternExpression extends Expression {
     return null;
   }
 
+  @override
+  AstNode transform(AstTransformer transformer, AstTransformerContext context) {
+    return this;
+  }
+
 }

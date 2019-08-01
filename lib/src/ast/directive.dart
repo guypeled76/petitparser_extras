@@ -1,3 +1,5 @@
+import 'package:petitparser_extras/src/transformers/transformer.dart';
+
 import 'index.dart';
 
 class DirectiveDefinition extends Definition implements ContainerNode {
@@ -12,5 +14,10 @@ class DirectiveDefinition extends Definition implements ContainerNode {
   @override
   ResultType visit<ResultType, ContextType>(AstVisitor<ResultType, ContextType> visitor, ContextType context) {
     return visitor.visitDirectiveDefinition(this, context);
+  }
+
+  @override
+  AstNode transform(AstTransformer transformer, AstTransformerContext context) {
+    return DirectiveDefinition(name, transformer.transformNodes(arguments, transformer.createContext(context, this)));
   }
 }

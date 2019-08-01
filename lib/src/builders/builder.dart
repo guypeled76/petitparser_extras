@@ -171,6 +171,7 @@ class AstBuilder {
     return parser.map((value) =>
         ArgumentDefinition(
             as_name(value),
+            as_value(value, UnknownTypeReference()),
             as_value(value)
         )
     );

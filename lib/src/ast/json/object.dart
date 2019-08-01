@@ -18,6 +18,9 @@ class JsonObject extends Expression {
   @override
   List<AstNode> get children => this.properties;
 
-
+  @override
+  AstNode transform(AstTransformer transformer, AstTransformerContext context) {
+    return this;
+  }
 
 }

@@ -1,3 +1,5 @@
+import 'package:petitparser_extras/src/transformers/transformer.dart';
+
 import 'index.dart';
 
 class UnaryExpression extends AstNode implements Expression  {
@@ -11,6 +13,11 @@ class UnaryExpression extends AstNode implements Expression  {
   @override
   ResultType visit<ResultType, ContextType>(AstVisitor<ResultType, ContextType> visitor, ContextType context) {
     return visitor.visitUnaryExpression(this, context);
+  }
+
+  @override
+  AstNode transform(AstTransformer transformer, AstTransformerContext context) {
+    return UnaryExpression(this.operator, transformer.transformNode(this.target, transformer.createContext(context, this)));
   }
 
 

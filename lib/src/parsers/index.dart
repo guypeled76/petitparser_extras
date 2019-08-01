@@ -5,3 +5,4 @@ export 'graphqlsdl.dart';
 export 'json.dart';
 export 'graphqlsdl.dart';
 export 'graphqlcommon.dart';
+export 'base.dart';

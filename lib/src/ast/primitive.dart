@@ -1,5 +1,7 @@
 
 
+import 'package:petitparser_extras/src/transformers/transformer.dart';
+
 import 'index.dart';
 
 
@@ -17,5 +19,10 @@ class PrimitiveExpression<PrimitiveType> extends Expression {
   @override
   String toString() {
     return value?.toString() ?? "null";
+  }
+
+  @override
+  AstNode transform(AstTransformer transformer, AstTransformerContext context) {
+    return this;
   }
 }

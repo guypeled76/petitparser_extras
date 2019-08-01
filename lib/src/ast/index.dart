@@ -21,6 +21,7 @@ export 'data.dart';
 export 'type.dart';
 export 'field.dart';
 export 'json/index.dart';
+export 'scope.dart';
 
 export 'package:petitparser_extras/src/visitors/index.dart';
 export 'package:petitparser_extras/src/printers/printer.dart';

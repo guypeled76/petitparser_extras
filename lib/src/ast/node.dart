@@ -1,3 +1,5 @@
+import 'package:petitparser_extras/petitparser_extras.dart';
+
 import 'index.dart';
 
 abstract class AstNode {
@@ -24,6 +26,10 @@ abstract class AstNode {
     return "?";
   }
 
+  AstNodeScope toScope() {
+    return AstNodeScope(this);
+  }
+
   String toAttributesString() {
     return "";
   }
@@ -36,6 +42,8 @@ abstract class AstNode {
     buffer.write("<${toTypeString()}:${toNameString()}${toAttributesString()}>");
   }
 
+
+  AstNode transform(AstTransformer transformer, AstTransformerContext context);
 
 
 }

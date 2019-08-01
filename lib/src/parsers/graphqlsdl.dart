@@ -3,16 +3,27 @@ import 'package:petitparser/petitparser.dart';
 import 'package:petitparser_extras/petitparser_extras.dart';
 
 
-class GraphSDLParser extends GrammarParser  {
-  GraphSDLParser() : super(const GraphSDLParserDefinition());
+class GraphQLSDLParser extends GrammarBaseParser  {
+  GraphQLSDLParser() : super(const GraphQLSDLParserDefinition());
 }
 
-class GraphSDLParserDefinition extends GraphQLCommonParserDefinition {
-  const GraphSDLParserDefinition();
+class GraphQLSDLParserDefinition extends GraphQLCommonParserDefinition {
+  const GraphQLSDLParserDefinition();
 
   @override
   Parser start() {
     return AstBuilder.as_compilationNode(super.schemaDocument());
   }
+
+}
+
+
+class GraphQLSDLTransformer extends AstTransformer {
+
+  final AstNode schemaAst;
+
+  GraphQLSDLTransformer(this.schemaAst);
+
+
 
 }

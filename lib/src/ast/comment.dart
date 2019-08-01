@@ -14,4 +14,9 @@ class Comment extends AstNode {
     return visitor.visitComment(this, context);
   }
 
+  @override
+  AstNode transform(AstTransformer transformer, AstTransformerContext context) {
+    return this;
+  }
+
 }

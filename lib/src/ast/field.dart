@@ -32,4 +32,16 @@ class FieldDefinition extends Definition implements ContainerNode {
 
     return [];
   }
+
+  @override
+  AstNode transform(AstTransformer transformer, AstTransformerContext context) {
+    context = transformer.createContext(context, this);
+
+    return FieldDefinition(
+        name,
+        transformer.transformNode(this.typeReference, context),
+        directives: transformer.transformNodes(this.directives, context),
+        arguments: transformer.transformNodes(this.arguments, context)
+    );
+  }
 }

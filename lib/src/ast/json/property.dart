@@ -18,4 +18,9 @@ class JsonProperty extends NamedNode implements Expression {
 
   @override
   List<AstNode> get children => [this.value];
+
+  @override
+  AstNode transform(AstTransformer transformer, AstTransformerContext context) {
+    return this;
+  }
 }

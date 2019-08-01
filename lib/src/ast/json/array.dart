@@ -18,6 +18,11 @@ class JsonArray extends Expression {
   @override
   List<AstNode> get children => this.items;
 
+  @override
+  AstNode transform(AstTransformer transformer, AstTransformerContext context) {
+    return this;
+  }
+
 
 
 }

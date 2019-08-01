@@ -1,3 +1,5 @@
+import 'package:petitparser_extras/petitparser_extras.dart';
+
 import 'index.dart';
 
 class BinaryExpression extends AstNode implements Expression  {
@@ -15,6 +17,16 @@ class BinaryExpression extends AstNode implements Expression  {
     return visitor.visitBinaryExpression(this, context);
   }
 
+  @override
+  AstNode transform(AstTransformer transformer, AstTransformerContext context) {
+    context = transformer.createContext(context, this);
+
+    return BinaryExpression(
+      operator,
+      transformer.transformNode(this.left, context),
+      transformer.transformNode(this.right, context),
+    );
+  }
 
 
 }

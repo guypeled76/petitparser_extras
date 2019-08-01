@@ -20,4 +20,9 @@ class AntlrRuleDefinition extends Definition {
     }
     return null;
   }
+
+  @override
+  AstNode transform(AstTransformer transformer, AstTransformerContext context) {
+    return this;
+  }
 }

@@ -1,21 +1,32 @@
 
 
+import 'dart:convert';
+
 import 'package:petitparser/debug.dart';
 import 'package:petitparser_extras/petitparser_extras.dart';
+import 'package:resource/resource.dart';
 import 'package:test/test.dart';
 
-void main() {
+void main() async {
+
+  var resource = new Resource("package:petitparser_extras/resources/schema_test.graphql");
+  var schema = await resource.readAsString(encoding: utf8);
+  
   test('Test', () {
     GraphQLParser parser = GraphQLParser();
 
-    var test1 = parser.parse(""" mutation {
-  createHashtag(name:"raw") {
-    id
-  }
-}
-    """);
+    var result = parser.parseToAstWithSchema(""" mutation {
+      createHashtag(name:"raw") {
+        id
+      }
+    }
+    """, schema);
 
-    print("result:\n${test1}");
+    if(parser.lastException != null) {
+      print("${parser.lastException}");
+    } else {
+      print("result:\n${result}");
+    }
 
   });
 }
