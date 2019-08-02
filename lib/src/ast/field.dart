@@ -13,12 +13,19 @@ class FieldDefinition extends Definition implements ContainerNode {
   FieldDefinition(String name, this.typeReference, {this.directives = const [], this.arguments = const []}) : super(name);
 
   @override
-  List<AstNode> get children => <AstNode>[typeReference, ...directives];
+  List<AstNode> get children => <AstNode>[typeReference, ...arguments ?? [], ...directives ?? []];
 
   @override
   ResultType visit<ResultType, ContextType>(AstVisitor<ResultType, ContextType> visitor, ContextType context) {
     return visitor.visitFieldDefinition(this, context);
   }
+
+  @override
+  Iterable<AstNodeScope> generateScopes(AstNodeScope current) sync* {
+    yield* arguments?.map((argument) => AstNodeScope(current, argument)) ?? [];
+    yield* typeReference?.resolveScope(current)?.scopes ?? [];
+  }
+
 
   String toAttributesString() {
     return super.toAttributesString() + toAttributeString("type", typeReference?.toNameString() ?? "?");

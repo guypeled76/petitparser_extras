@@ -20,10 +20,36 @@ class GraphQLSDLParserDefinition extends GraphQLCommonParserDefinition {
 
 class GraphQLSDLTransformer extends AstTransformer {
 
-  final AstNode schemaAst;
+  final AstNodeScope global;
 
-  GraphQLSDLTransformer(this.schemaAst);
+  GraphQLSDLTransformer(AstNode schemaAst) : global = AstNodeScope(null, schemaAst);
 
 
+  @override
+  AstNode visitTypeReference(TypeReference typeReference, AstTransformerContext context) {
+
+    if(typeReference is UnknownTypeReference) {
+
+      var result = global.resolveType(context.nodePath);
+      if(result != null) {
+        return result;
+      }
+    }
+    return super.visitTypeReference(typeReference, context);
+  }
+
+  @override
+  AstTransformerContext createContext(AstTransformerContext context, AstNode node) {
+    return GraphQLSDLTransformerContext(this, context, node);
+  }
+
+}
+
+
+class GraphQLSDLTransformerContext extends AstTransformerContext {
+
+  GraphQLSDLTransformer transformer;
+
+  GraphQLSDLTransformerContext(this.transformer, AstTransformerContext context, AstNode node) : super(context, node);
 
 }

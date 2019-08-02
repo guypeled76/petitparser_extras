@@ -9,17 +9,17 @@ import 'package:test/test.dart';
 
 void main() async {
 
-  var resource = new Resource("package:petitparser_extras/resources/schema_test.graphql");
+  var resource = Resource("package:petitparser_extras/resources/schema_test.graphql");
   var schema = await resource.readAsString(encoding: utf8);
   
   test('Test', () {
     GraphQLParser parser = GraphQLParser();
 
     var result = parser.parseToAstWithSchema(""" mutation {
-      createHashtag(name:"raw") {
-        id
-      }
-    }
+  deleteHashtag(id:"3") {
+    status
+  }
+}
     """, schema);
 
     if(parser.lastException != null) {

@@ -90,7 +90,7 @@ class AstTransformer implements AstVisitor<AstNode, AstTransformerContext> {
     return variableNode.transform(this, context);
   }
 
-  AstTransformerContext createContext<AstNodeType extends AstNode>(AstTransformerContext context, AstNodeType node) {
+  AstTransformerContext createContext(AstTransformerContext context, AstNode node) {
     return AstTransformerContext(context, node);
   }
 
@@ -105,11 +105,8 @@ class AstTransformer implements AstVisitor<AstNode, AstTransformerContext> {
     if(nodes == null) {
       return null;
     }
-    List<AstNodeType> transformedNodes = List(nodes.length);
-    for(int i=0;i<nodes.length;i++) {
-      transformedNodes[i] = transformNode(nodes[i], context);
-    }
-    return transformedNodes;
+
+    return nodes.map((node)=>transformNode(node, context)).toList(growable: false);
   }
 
   AstNode transform(AstNode input) {
@@ -120,8 +117,22 @@ class AstTransformer implements AstVisitor<AstNode, AstTransformerContext> {
 
 class AstTransformerContext {
 
-    final AstTransformerContext context;
-    final AstNode node;
+  final AstTransformerContext parent;
+  
+  final AstNode node;
 
-    AstTransformerContext(this.context, this.node);
+  AstTransformerContext(this.parent, this.node);
+
+  Iterable<AstNode> get nodePath {
+    return path.map((context)=>context.node).where((node)=>node!=null);
+  }
+
+  Iterable<AstTransformerContext> get path sync* {
+    if(parent != null) {
+      yield* parent.path;
+    }
+    yield this;
+  }
+
+
 }

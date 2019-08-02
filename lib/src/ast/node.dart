@@ -27,7 +27,7 @@ abstract class AstNode {
   }
 
   AstNodeScope toScope() {
-    return AstNodeScope(this);
+    return AstNodeScope(null, this);
   }
 
   String toAttributesString() {
@@ -44,6 +44,14 @@ abstract class AstNode {
 
 
   AstNode transform(AstTransformer transformer, AstTransformerContext context);
+
+  AstNodeScope resolveScope(AstNodeScope current) {
+    return null;
+  }
+
+  Iterable<AstNodeScope> generateScopes(AstNodeScope current) {
+    return const [];
+  }
 
 
 }

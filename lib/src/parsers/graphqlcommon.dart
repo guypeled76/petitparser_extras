@@ -33,7 +33,7 @@ abstract class GraphQLCommonParserDefinition extends GraphQLCommonGrammarDefinit
     return super.operationDefinition().map((value) =>
         TypeDefinition(
             AstBuilder.as_name(value),
-            TypeReference(AstBuilder.as_data_value(value, "operation", "query")),
+            TypeReference(AstBuilder.as_data_value(value, "baseType", "Query")),
             AstBuilder.as_list(value)
         )
     );
@@ -46,17 +46,17 @@ abstract class GraphQLCommonParserDefinition extends GraphQLCommonGrammarDefinit
 
   @override
   Parser QUERY() {
-    return AstBuilder.as_data(super.QUERY(), "operation", "query");
+    return AstBuilder.as_data(super.QUERY(), "baseType", "Query");
   }
 
   @override
   Parser MUTATION() {
-    return AstBuilder.as_data(super.MUTATION(), "operation", "mutation");
+    return AstBuilder.as_data(super.MUTATION(), "baseType", "Mutation");
   }
 
   @override
   Parser SUBSCRIPTION() {
-    return AstBuilder.as_data(super.SUBSCRIPTION(), "operation", "subscription");
+    return AstBuilder.as_data(super.SUBSCRIPTION(), "baseType", "Subscription");
   }
   
   

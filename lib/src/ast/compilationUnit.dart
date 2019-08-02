@@ -23,4 +23,14 @@ class CompilationUnit extends AstNode {
     return CompilationUnit(transformer.transformNodes(_children, transformer.createContext(context, this)));
   }
 
+  @override
+  AstNodeScope resolveScope(AstNodeScope current) {
+    return current;
+  }
+
+  @override
+  Iterable<AstNodeScope> generateScopes(AstNodeScope current) {
+    return AstNodeScope.generateScopesFromNodes(current, this.children);
+  }
+
 }

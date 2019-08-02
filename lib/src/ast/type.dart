@@ -13,7 +13,7 @@ class TypeDefinition extends Definition implements ContainerNode, TypeReference 
   TypeDefinition(String name, this.baseType, this.fields, {this.implementedTypes = const[]}) : super(name);
 
   @override
-  List<AstNode> get children => [...this.fields, this.baseType, ...this.implementedTypes];
+  List<AstNode> get children => [...this.fields, this.baseType, ...(this.implementedTypes??[])];
 
   @override
   ResultType visit<ResultType, ContextType>(AstVisitor<ResultType, ContextType> visitor, ContextType context) {
@@ -23,6 +23,17 @@ class TypeDefinition extends Definition implements ContainerNode, TypeReference 
   @override
   String toAttributesString() {
     return super.toAttributesString() + toAttributeString("type", baseType?.toNameString() ?? "?");
+  }
+
+  @override
+  AstNodeScope resolveScope(AstNodeScope current) {
+    return baseType?.resolveScope(current) ?? current;
+  }
+
+  @override
+  Iterable<AstNodeScope> generateScopes(AstNodeScope current) sync* {
+    yield* AstNodeScope.generateScopesFromNodes(current, this.fields);
+    yield* baseType?.resolveScope(current)?.scopes ?? [];
   }
 
   @override
@@ -58,17 +69,27 @@ class TypeDefinition extends Definition implements ContainerNode, TypeReference 
 
 class AnonymousTypeReference extends TypeDefinition {
 
-  AnonymousTypeReference(List<FieldDefinition> fields) : super("?", null, fields);
+  AnonymousTypeReference(TypeReference baseType, List<FieldDefinition> fields, {List<TypeReference> implementedTypes = const[]}) : super("?", baseType, fields, implementedTypes:implementedTypes);
 
   @override
   bool get isAnonymous => true;
 
   @override
+  String toNameString() {
+    return "AnonymousTypeOf:${baseType?.toNameString() ?? "?"}";
+  }
+
+  @override
   AstNode transform(AstTransformer transformer, AstTransformerContext context) {
+    context = transformer.createContext(context, this);
+
     return AnonymousTypeReference(
-        transformer.transformNodes(this.fields, transformer.createContext(context, this))
+        transformer.transformNode(this.baseType, context),
+        transformer.transformNodes(this.fields, context),
+        implementedTypes: transformer.transformNodes(this.implementedTypes, context)
     );
   }
+
 
 }
 
@@ -85,6 +106,8 @@ class TypeReference extends AstNode {
 
   TypeReference get element => null;
 
+  TypeReference get baseType => null;
+
   bool get isArray => false;
 
   bool get isNotNull => false;
@@ -92,6 +115,8 @@ class TypeReference extends AstNode {
   bool get isAnonymous => false;
 
   bool get isUnknown => false;
+
+  List<FieldDefinition> get fields => const [];
 
   @override
   String toNameString() {
@@ -101,6 +126,23 @@ class TypeReference extends AstNode {
   @override
   AstNode transform(AstTransformer transformer, AstTransformerContext context) {
     return this;
+  }
+
+  @override
+  AstNodeScope resolveScope(AstNodeScope current) {
+    return current?.scopeByName(name) ?? current;
+  }
+
+  static TypeReference fromNode(AstNode node) {
+    if(node is TypeReference) {
+      return node;
+    } else if(node is FieldDefinition) {
+      return node.typeReference;
+    } else if(node is ArgumentDefinition) {
+      return node.type;
+    } else {
+      return null;
+    }
   }
 }
 
@@ -113,6 +155,11 @@ class UnknownTypeReference extends TypeReference {
   @override
   AstNode transform(AstTransformer transformer, AstTransformerContext context) {
     return this;
+  }
+
+  @override
+  AstNodeScope resolveScope(AstNodeScope current) {
+    return current;
   }
 }
 
@@ -135,6 +182,11 @@ class ArrayTypeReference extends TypeReference {
     );
   }
 
+  @override
+  AstNodeScope resolveScope(AstNodeScope current) {
+    return element?.resolveScope(current) ?? current;
+  }
+
 }
 
 class NotNullReference extends TypeReference {
@@ -150,10 +202,20 @@ class NotNullReference extends TypeReference {
   bool get isNotNull => true;
 
   @override
+  List<FieldDefinition> get fields => element?.fields ?? const [];
+
+
+
+  @override
   AstNode transform(AstTransformer transformer, AstTransformerContext context) {
     return NotNullReference(
         transformer.transformNode(this.element, transformer.createContext(context, this))
     );
+  }
+
+  @override
+  AstNodeScope resolveScope(AstNodeScope current) {
+    return element?.resolveScope(current);
   }
 
 }
