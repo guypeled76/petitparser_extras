@@ -43,6 +43,10 @@ class GraphQLSDLTransformer extends AstTransformer {
     return GraphQLSDLTransformerContext(this, context, node);
   }
 
+  static GraphQLSDLTransformer load(String schema) {
+    return GraphQLSDLTransformer(GraphQLSDLParser().parseToAst(schema));
+  }
+
 }
 
 

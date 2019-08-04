@@ -5,18 +5,19 @@ import 'package:petitparser_extras/petitparser_extras.dart';
 
 
 class GraphQLParser extends GrammarBaseParser  {
-  GraphQLParser() : super(const GraphQLParserDefinition());
+
+  final GraphQLSDLTransformer _schemaTransformer;
+
+  GraphQLParser(String schema) : _schemaTransformer = GraphQLSDLTransformer.load(schema), super(const GraphQLParserDefinition());
 
   @override
-  GrammarBaseParser createSchemaParser() {
-    return GraphQLSDLParser();
+  AstNode parseToAst(String input) {
+    AstNode inputAst = super.parseToAst(input);
+    if(_schemaTransformer != null) {
+      inputAst = _schemaTransformer.transform(inputAst);
+    }
+    return inputAst;
   }
-  
-  @override
-  AstNode applySchema(AstNode inputAst, AstNode schemaAst) {
-    return GraphQLSDLTransformer(schemaAst).transform(inputAst);
-  }
-
 }
 
 class GraphQLParserDefinition extends GraphQLCommonParserDefinition  {
