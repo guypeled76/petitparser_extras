@@ -1,22 +1,32 @@
-A library for Dart developers.
 
-Created from templates made available by Stagehand under a BSD-style
-[license](https://github.com/dart-lang/stagehand/blob/master/LICENSE).
+
+PertitParserExtras is build above pertit parser and adds language parsers and abstract syntax tree generation infrastructure.
 
 ## Usage
 
-A simple usage example:
+From the client perspective languages can be parsed to AST nodes using a set of parsers.
+In the following example we are parsing a graphql query and adding schema information
+on it. This was the original purpose of creating this library which is to serve
+as an infrastructure for generating a graphql client:
 
 ```dart
-import 'package:petitparser_extras/petitparser_extras.dart';
 
-main() {
-  var awesome = new Awesome();
+// Create a graphql parser based on a schema code
+GraphQLParser queryParser = GraphQLParser(schema);
+
+// Parse the following graphql query and add schema data to it.
+var result = queryParser.parseToAst(""" 
+  mutation {
+    deleteHashtag(id:"3") {
+      status
+    }
+  }
+""");
+
+if (queryParser.lastException != null) {
+  print("${queryParser.lastException}");
+} else {
+  print("result:\n${result}");
 }
 ```
 
-## Features and bugs
-
-Please file feature requests and bugs at the [issue tracker][tracker].
-
-[tracker]: http://example.com/issues/replaceme

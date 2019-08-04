@@ -44,6 +44,9 @@ class GraphQLSDLTransformer extends AstTransformer {
   }
 
   static GraphQLSDLTransformer load(String schema) {
+    if(schema?.isEmpty ?? true) {
+      return null;
+    }
     return GraphQLSDLTransformer(GraphQLSDLParser().parseToAst(schema));
   }
 

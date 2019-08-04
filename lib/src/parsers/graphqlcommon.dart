@@ -21,7 +21,6 @@ abstract class GraphQLCommonParserDefinition extends GraphQLCommonGrammarDefinit
     return AstBuilder.as_argumentDefinition(super.argument());
   }
 
-
   @override
   Parser operationDefinition() {
     return super.operationDefinition().map((value) =>
@@ -113,15 +112,10 @@ abstract class GraphQLCommonParserDefinition extends GraphQLCommonGrammarDefinit
     return AstBuilder.as_argumentDefinition(super.inputValueDefinition());
   }
 
-
-
   @override
   Parser field() {
     return GrapgQLBuilder.as_fieldDefinitionWithAnonymousType(super.field());
   }
-  
-
-
 
   @override
   Parser type() {

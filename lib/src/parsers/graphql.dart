@@ -8,7 +8,7 @@ class GraphQLParser extends GrammarBaseParser  {
 
   final GraphQLSDLTransformer _schemaTransformer;
 
-  GraphQLParser(String schema) : _schemaTransformer = GraphQLSDLTransformer.load(schema), super(const GraphQLParserDefinition());
+  GraphQLParser([String schema]) : _schemaTransformer = GraphQLSDLTransformer.load(schema), super(const GraphQLParserDefinition());
 
   @override
   AstNode parseToAst(String input) {
@@ -27,7 +27,4 @@ class GraphQLParserDefinition extends GraphQLCommonParserDefinition  {
   Parser start() {
     return AstBuilder.as_compilationNode(super.queryDocument());
   }
-
-
-
 }
