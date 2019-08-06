@@ -22,6 +22,26 @@ abstract class GraphQLCommonParserDefinition extends GraphQLCommonGrammarDefinit
   }
 
   @override
+  Parser variable() {
+    return AstBuilder.as_identifierExpression(super.variable());
+  }
+
+  @override
+  Parser objectValueWithVariable() {
+    return AstBuilder.as_objectExpression(super.objectValueWithVariable());
+  }
+
+  @override
+  Parser objectFieldWithVariable() {
+    return AstBuilder.as_objectProperty(super.objectFieldWithVariable());
+  }
+
+  @override
+  Parser arrayValueWithVariable() {
+    return AstBuilder.as_arrayExpression(super.arrayValueWithVariable());
+  }
+
+  @override
   Parser operationDefinition() {
     return super.operationDefinition().map((value) =>
         TypeDefinition(

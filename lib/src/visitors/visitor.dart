@@ -77,4 +77,16 @@ class AstVisitor<ResultType, ContextType> {
   ResultType visitTypeDefinition(TypeDefinition typeDefinition, ContextType context)  {
     return null;
   }
+
+  ResultType visitObjectProperty(ObjectProperty objectProperty, ContextType context) {
+    return null;
+  }
+
+  ResultType visitObjectExpression(ObjectExpression objectExpression, ContextType context) {
+    return null;
+  }
+
+  ResultType visitArrayExpression(ArrayExpression arrayExpression, ContextType context) {
+    return null;
+  }
 }

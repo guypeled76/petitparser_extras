@@ -1,7 +1,7 @@
 
 import 'package:petitparser_extras/petitparser_extras.dart';
 
-class JsonPrinter extends PrinterBase<JsonPrinterContext> implements JsonAstVisitor<void, JsonPrinterContext> {
+class JsonPrinter extends PrinterBase<JsonPrinterContext> {
   
   @override
   JsonPrinterContext createContext(bool indentation) {
@@ -9,22 +9,22 @@ class JsonPrinter extends PrinterBase<JsonPrinterContext> implements JsonAstVisi
   }
 
   @override
-  void visitJsonArray(JsonArray jsonArray, JsonPrinterContext context) {
+  void visitArrayExpression(ArrayExpression arrayExpression, JsonPrinterContext context) {
     print_item("[", null, context);
-    print_list(jsonArray.items, null, context);
+    print_list(arrayExpression.items, null, context);
     print_item("]", null, context);
   }
 
   @override
-  void visitJsonObject(JsonObject jsonObject, JsonPrinterContext context) {
+  void visitObjectExpression(ObjectExpression objectExpression, JsonPrinterContext context) {
     print_item("{", null, context);
-    print_list(jsonObject.properties, context.CommaSeparatedStyle, context);
+    print_list(objectExpression.properties, context.CommaSeparatedStyle, context);
     print_item("}", null, context);
   }
 
   @override
-  void visitJsonProperty(JsonProperty jsonProperty, JsonPrinterContext context) {
-    print_items([jsonProperty.name,":", jsonProperty.value], context);
+  void visitObjectProperty(ObjectProperty objectProperty, JsonPrinterContext context) {
+    print_items([objectProperty.name,":", objectProperty.value], context);
   }
   
 }

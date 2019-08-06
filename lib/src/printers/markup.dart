@@ -53,8 +53,10 @@ class MarkupPrinter extends PrinterBase<MarkupPrinterContext> {
         argumentNode,
         attributes: {
           "name": argumentNode.name,
-          "type": argumentNode.type
-        }
+          "type": argumentNode.type,
+          "value": argumentNode.value
+        },
+        content: [argumentNode.value]
     );
   }
 
@@ -71,6 +73,36 @@ class MarkupPrinter extends PrinterBase<MarkupPrinterContext> {
           "name": fieldDefinition.name,
           "type": fieldDefinition.typeReference
         }
+    );
+  }
+
+  @override
+  void visitArrayExpression(ArrayExpression arrayExpression, MarkupPrinterContext context) {
+    print_tag(
+        context,
+        arrayExpression,
+        content: [...arrayExpression.items??[]]
+    );
+  }
+
+  @override
+  void visitObjectExpression(ObjectExpression objectExpression, MarkupPrinterContext context) {
+    print_tag(
+        context,
+        objectExpression,
+        content: [...objectExpression.properties??[]]
+    );
+  }
+
+  @override
+  void visitObjectProperty(ObjectProperty objectProperty, MarkupPrinterContext context) {
+    print_tag(
+        context,
+        objectProperty,
+        attributes: {
+          "name":objectProperty.name
+        },
+        content: [objectProperty.value]
     );
   }
 

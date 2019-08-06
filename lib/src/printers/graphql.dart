@@ -40,6 +40,25 @@ class GraphQLPrinter extends PrinterBase<GraphQLPrinterContext> {
   }
 
   @override
+  void visitArrayExpression(ArrayExpression arrayExpression, GraphQLPrinterContext context) {
+    print_item("[", null, context);
+    print_list(arrayExpression.items, null, context);
+    print_item("]", null, context);
+  }
+
+  @override
+  void visitObjectExpression(ObjectExpression objectExpression, GraphQLPrinterContext context) {
+    print_item("{", null, context);
+    print_list(objectExpression.properties, context.CommaSeparatedStyle, context);
+    print_item("}", null, context);
+  }
+
+  @override
+  void visitObjectProperty(ObjectProperty objectProperty, GraphQLPrinterContext context) {
+    print_items([objectProperty.name,":", objectProperty.value], context);
+  }
+
+  @override
   GraphQLPrinterContext createContext(bool indentation) {
     if(indentation) {
       return _GraphQLPrinterIndentedContext();
@@ -50,6 +69,7 @@ class GraphQLPrinter extends PrinterBase<GraphQLPrinterContext> {
 }
 
 abstract class GraphQLPrinterContext implements PrintContext {
+  PrintListStyle get CommaSeparatedStyle => PrintListStyle(separator: ",");
   PrintListStyle get OperationsStyle;
   PrintListStyle get FieldsStyle;
   PrintListStyle get FieldArgumentsStyle;
@@ -57,6 +77,8 @@ abstract class GraphQLPrinterContext implements PrintContext {
 }
 
 class _GraphQLPrinterIndentedContext extends PrintContext implements GraphQLPrinterContext {
+
+  PrintListStyle get CommaSeparatedStyle => PrintListStyle(separator: ",");
 
   final PrintListStyle OperationsStyle = PrintListStyle(
       newline: true
@@ -83,6 +105,8 @@ class _GraphQLPrinterIndentedContext extends PrintContext implements GraphQLPrin
 }
 
 class _GraphQLPrinterCompactContext extends PrintContext implements GraphQLPrinterContext{
+
+  PrintListStyle get CommaSeparatedStyle => PrintListStyle(separator: ",");
 
   final PrintListStyle OperationsStyle = PrintListStyle(
       newline: false,

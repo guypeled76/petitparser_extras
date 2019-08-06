@@ -14,17 +14,17 @@ class JsonParserDefinition extends JsonGrammarDefinition with AstBuilder {
 
   @override
   Parser object() {
-    return JsonBuilder.as_object(super.object());
+    return AstBuilder.as_objectExpression(super.object());
   }
 
   @override
   Parser property() {
-    return JsonBuilder.as_property(super.property());
+    return AstBuilder.as_objectProperty(super.property());
   }
 
   @override
   Parser array() {
-    return JsonBuilder.as_array(super.array());
+    return AstBuilder.as_arrayExpression(super.array());
   }
 
   @override

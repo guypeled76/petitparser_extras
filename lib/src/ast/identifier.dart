@@ -20,4 +20,9 @@ class IdentifierExpression extends Expression {
   AstNode transform(AstTransformer transformer, AstTransformerContext context) {
     return this;
   }
+
+  @override
+  String toValueString() {
+    return "\$${identifier}";
+  }
 }

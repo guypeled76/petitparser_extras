@@ -249,6 +249,30 @@ class AstBuilder {
 
 
 
+  static Parser as_objectExpression(Parser parser) {
+    return parser.map((value) =>
+        ObjectExpression(
+            AstBuilder.as_list(value)
+        )
+    );
+  }
+
+  static Parser as_objectProperty(Parser parser) {
+    return parser.map((value) =>
+        ObjectProperty(
+            AstBuilder.as_name(value),
+            AstBuilder.as_value(value)
+        )
+    );
+  }
+
+  static Parser as_arrayExpression(Parser parser) {
+    return parser.map((value) =>
+        ArrayExpression(
+            AstBuilder.as_list(value)
+        )
+    );
+  }
 
 
 

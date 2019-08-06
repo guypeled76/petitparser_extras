@@ -1,28 +1,23 @@
 import 'package:petitparser_extras/petitparser_extras.dart';
 
-class JsonArray extends Expression {
+class ObjectExpression extends Expression {
 
 
-  final List<Expression> items;
+  final List<ObjectProperty> properties;
 
-  JsonArray(this.items);
+  ObjectExpression(this.properties);
 
   @override
   ResultType visit<ResultType, ContextType>(AstVisitor<ResultType, ContextType> visitor, ContextType context) {
-    if(visitor is JsonAstVisitor<ResultType, ContextType>) {
-      return (visitor as JsonAstVisitor<ResultType, ContextType>).visitJsonArray(this, context);
-    }
-    return null;
+    return visitor.visitObjectExpression(this, context);
   }
 
   @override
-  List<AstNode> get children => this.items;
+  List<AstNode> get children => this.properties;
 
   @override
   AstNode transform(AstTransformer transformer, AstTransformerContext context) {
     return this;
   }
-
-
 
 }

@@ -6,3 +6,4 @@ export 'json.dart';
 export 'graphqlsdl.dart';
 export 'graphqlcommon.dart';
 export 'base.dart';
+export 'graphqlclient.dart';

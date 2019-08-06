@@ -20,6 +20,10 @@ class PrimitiveExpression<PrimitiveType> extends Expression {
   String toString() {
     return value?.toString() ?? "null";
   }
+  @override
+  String toValueString() {
+    return this.toString();
+  }
 
   @override
   AstNode transform(AstTransformer transformer, AstTransformerContext context) {
