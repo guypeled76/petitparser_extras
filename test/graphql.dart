@@ -14,18 +14,27 @@ void main() async {
   test('Test', () {
     GraphQLParser queryParser = GraphQLParser(schema);
 
-    var result = queryParser.parseToAst(""" 
-      mutation {
-        deleteHashtag(id:"3") {
-          status
-        }
-      }
+    AstNode compilationUnit = queryParser.parseToAst(""" 
+      
+      query {
+      currentUser {
+      id,
+      name
+      },
+  users {
+    id,
+    name, 
+    hashtags {
+      name
+    }
+  }
+}
     """);
 
     if (queryParser.lastException != null) {
       print("${queryParser.lastException}");
     } else {
-      print("result:\n${result}");
+      print("result:\n${compilationUnit.toMarkupString()}");
     }
   });
 }

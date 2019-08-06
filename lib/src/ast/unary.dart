@@ -20,8 +20,6 @@ class UnaryExpression extends AstNode implements Expression  {
     return UnaryExpression(this.operator, transformer.transformNode(this.target, transformer.createContext(context, this)));
   }
 
-
-
 }
 
 enum UnaryOperator {

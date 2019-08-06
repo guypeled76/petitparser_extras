@@ -12,9 +12,9 @@ void main() async {
   test('Test', () {
     GraphQLSDLParser parser = GraphQLSDLParser();
 
-    var test1 = parser.parse(resourceContent);
+    var compilationUnit = parser.parseToAst(resourceContent);
 
 
-    print("result:\n${test1}");
+    print("result:\n${compilationUnit.toMarkupString()}");
   });
 }

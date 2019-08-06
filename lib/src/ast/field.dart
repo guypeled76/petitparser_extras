@@ -27,11 +27,6 @@ class FieldDefinition extends Definition implements ContainerNode {
   }
 
 
-  String toAttributesString() {
-    return super.toAttributesString() + toAttributeString("type", typeReference?.toNameString() ?? "?");
-  }
-
-
   List<FieldDefinition> get fields {
     if(typeReference is TypeDefinition) {
       return (typeReference as TypeDefinition).fields;

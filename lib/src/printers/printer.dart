@@ -41,6 +41,62 @@ abstract class PrinterBase<ContextType extends PrintContext> extends AstVisitor<
       context._write(style.after);
     }
   }
+
+  void print_tag(ContextType context, Object tag,{List content, Map<String, Object> attributes}) {
+    var tagName = tag?.runtimeType.toString()?? "?";
+
+    context._writeIndentation();
+    context._write("<${tagName}");
+    if(attributes != null) {
+      print_attributes(attributes, context);
+    }
+    if(content != null && content.isNotEmpty && context.printTagContent) {
+      context._write(">\n");
+      context._indent();
+      print_items(content, context);
+      context._unindent();
+      context._writeIndentation();
+      context._write("</${tagName}>\n");
+    } else {
+      context._write(" />\n");
+    }
+  }
+
+  void print_attributes(Map<String, Object> attributes, ContextType context) {
+    if(attributes?.isEmpty ?? true) {
+      return;
+    }
+
+    attributes.forEach((name, value) {
+      print_attribute(name, value, context);
+    });
+
+  }
+
+  void print_attribute(String name, Object value, ContextType context) {
+    if (value == null) {
+      return;
+    }
+    if (value is String && value.isEmpty) {
+      return;
+    }
+    
+    context._write(" ");
+    context._write(name);
+    context._write("=");
+    print_value(value, context);
+  }
+
+  void print_value(Object value, ContextType context) {
+    if(value == null) {
+      return;
+    }
+    if(value is AstNode) {
+        context._write(value.toValueString());
+    } else {
+        context._write(value.toString());
+    }
+  }
   
   void print_list(List list, PrintListStyle style, ContextType context) {
     if(list == null) {
@@ -107,6 +163,8 @@ abstract class PrinterBase<ContextType extends PrintContext> extends AstVisitor<
 }
 
 class PrintContext {
+
+  final bool printTagContent = false;
 
   final PrintItemStyle SpaceBeforeStyle = PrintItemStyle(
       printIfNull: false,

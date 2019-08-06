@@ -108,12 +108,7 @@ class AstNodeScope {
       return typeReference;
     }
 
-    AstNode node = typeReference.resolveScope(this)?.node;
-    if(node is TypeReference) {
-      return node;
-    }
-
-    return typeReference;
+    return typeReference.resolveType(this) ?? typeReference;
   }
 
   AstNodeScope resolveTypeDefinition(AstNodeScope current) {

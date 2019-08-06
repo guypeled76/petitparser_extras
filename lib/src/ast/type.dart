@@ -20,15 +20,17 @@ class TypeDefinition extends Definition implements ContainerNode, TypeReference 
     return visitor.visitTypeDefinition(this, context);
   }
 
-  @override
-  String toAttributesString() {
-    return super.toAttributesString() + toAttributeString("type", baseType?.toNameString() ?? "?");
-  }
 
   @override
   AstNodeScope resolveScope(AstNodeScope current) {
     return baseType?.resolveScope(current) ?? current;
   }
+
+  @override
+  TypeReference resolveType(AstNodeScope current) {
+    return this;
+  }
+
 
   @override
   Iterable<AstNodeScope> generateScopes(AstNodeScope current) sync* {
@@ -65,6 +67,10 @@ class TypeDefinition extends Definition implements ContainerNode, TypeReference 
 
   }
 
+  @override
+  String toValueString() {
+    return this.name;
+  }
 }
 
 class AnonymousTypeReference extends TypeDefinition {
@@ -73,11 +79,6 @@ class AnonymousTypeReference extends TypeDefinition {
 
   @override
   bool get isAnonymous => true;
-
-  @override
-  String toNameString() {
-    return "AnonymousTypeOf:${baseType?.toNameString() ?? "?"}";
-  }
 
   @override
   AstNode transform(AstTransformer transformer, AstTransformerContext context) {
@@ -90,6 +91,10 @@ class AnonymousTypeReference extends TypeDefinition {
     );
   }
 
+  @override
+  String toValueString() {
+    return "?:${baseType?.toValueString()??"?"}";
+  }
 
 }
 
@@ -119,8 +124,8 @@ class TypeReference extends AstNode {
   List<FieldDefinition> get fields => const [];
 
   @override
-  String toNameString() {
-    return this.name;
+  String toValueString() {
+    return "${this.name}";
   }
 
   @override
@@ -144,6 +149,14 @@ class TypeReference extends AstNode {
       return null;
     }
   }
+
+  TypeReference resolveType(AstNodeScope current) {
+    var node = this.resolveScope(current)?.node;
+    if(node is TypeReference) {
+      return node;
+    }
+    return null;
+  }
 }
 
 class UnknownTypeReference extends TypeReference {
@@ -160,6 +173,11 @@ class UnknownTypeReference extends TypeReference {
   @override
   AstNodeScope resolveScope(AstNodeScope current) {
     return current;
+  }
+
+  @override
+  TypeReference resolveType(AstNodeScope current) {
+    return null;
   }
 }
 
@@ -187,6 +205,15 @@ class ArrayTypeReference extends TypeReference {
     return element?.resolveScope(current) ?? current;
   }
 
+  @override
+  TypeReference resolveType(AstNodeScope current) {
+    TypeReference typeReference = element?.resolveType(current);
+    if(typeReference != null) {
+      return ArrayTypeReference(typeReference);
+    }
+    return null;
+  }
+
 }
 
 class NotNullReference extends TypeReference {
@@ -205,6 +232,10 @@ class NotNullReference extends TypeReference {
   List<FieldDefinition> get fields => element?.fields ?? const [];
 
 
+  @override
+  String toValueString() {
+    return "${element?.toValueString()??"?"}!";
+  }
 
   @override
   AstNode transform(AstTransformer transformer, AstTransformerContext context) {
@@ -216,6 +247,15 @@ class NotNullReference extends TypeReference {
   @override
   AstNodeScope resolveScope(AstNodeScope current) {
     return element?.resolveScope(current);
+  }
+
+  @override
+  TypeReference resolveType(AstNodeScope current) {
+    TypeReference typeReference = element?.resolveType(current);
+    if(typeReference != null) {
+      return NotNullReference(typeReference);
+    }
+    return null;
   }
 
 }

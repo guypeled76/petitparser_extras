@@ -13,33 +13,25 @@ abstract class AstNode {
 
   @override
   String toString() {
-    StringBuffer buffer = StringBuffer();
-    _fillDescription(buffer, 0);
-    return buffer.toString();
+    MarkupPrinter markupPrinter = MarkupPrinter();
+    PrintContext context = markupPrinter.createContext(false);
+    this.visit(markupPrinter, context);
+    return context.toString();
+  }
+  
+  String toMarkupString() {
+    MarkupPrinter markupPrinter = MarkupPrinter();
+    PrintContext context = markupPrinter.createContext(true);
+    this.visit(markupPrinter, context);
+    return context.toString();
   }
 
-  String toTypeString() {
-    return this.runtimeType.toString();
-  }
-
-  String toNameString() {
-    return "?";
+  String toValueString() {
+    return null;
   }
 
   AstNodeScope toScope() {
     return AstNodeScope(null, this);
-  }
-
-  String toAttributesString() {
-    return "";
-  }
-
-  String toAttributeString(String name, String value) {
-    return " ${name}=${value}";
-  }
-
-  void _fillDescription(StringBuffer buffer, int indent) {
-    buffer.write("<${toTypeString()}:${toNameString()}${toAttributesString()}>");
   }
 
 

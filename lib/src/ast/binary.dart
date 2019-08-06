@@ -12,6 +12,11 @@ class BinaryExpression extends AstNode implements Expression  {
 
   BinaryExpression(this.operator, this.left, this.right);
 
+  Iterable<AstNode> getMarkupChildren() sync* {
+    if(left != null) yield left;
+    if(right != null) yield right;
+  }
+
   @override
   ResultType visit<ResultType, ContextType>(AstVisitor<ResultType, ContextType> visitor, ContextType context) {
     return visitor.visitBinaryExpression(this, context);

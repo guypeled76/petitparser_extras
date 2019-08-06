@@ -1,3 +1,130 @@
+directive @require(permission: String!) on FIELD_DEFINITION
+type Chat {
+    id: ID!
+    createdAt: Timestamp!
+    createdBy: User
+    deletedAt: Timestamp
+    deletedBy: User
+    updatedAt: Timestamp!
+    updatedBy: User
+    messages(filter: ResultsFilter!): [Message!]!
+}
+
+type Clinic {
+    id: ID!
+    name: String!
+    createdBy: ID!
+    createdAt: Timestamp!
+    updatedAt: Timestamp!
+    deletedAt: Timestamp
+}
+
+input DeletePost {
+    id: String!
+}
+
+input DeleteWaterfall {
+    id: String!
+}
+
+type Hashtag {
+    id: ID!
+    name: String!
+    createdAt: Timestamp!
+    createdBy: User
+    deletedAt: Timestamp
+    deletedBy: User
+    updatedAt: Timestamp!
+    updatedBy: User
+}
+
+enum HashtagContext {
+    Video
+    Photos
+    Ingredients
+    Recipes
+    Meals
+    Measurements
+    Posts
+    Users
+    Waterfalls
+}
+
+type Ingredient {
+    id: ID!
+    name: String!
+    hashtags: [Hashtag!]!
+    createdAt: Timestamp!
+    createdBy: User!
+    deletedAt: Timestamp
+    deletedBy: User
+    updatedAt: Timestamp!
+    updatedBy: User!
+    portions: [Portion!]!
+    calories: Float
+    totalFat: Float
+    saturatedFat: Float
+    monounsaturatedFat: Float
+    transFat: Float
+    cholesterol: Float
+    sodium: Float
+    potassium: Float
+    totalCarbohydrate: Float
+    dietaryFiber: Float
+    sugar: Float
+    protein: Float
+}
+
+type Measurement {
+    id: ID!
+    name: String!
+    chat: Chat!
+    unit: MeasurementUnit!
+    description: String!
+    hashtags: [Hashtag!]!
+    results: [MeasurementResult!]!
+    createdAt: Timestamp!
+    createdBy: User
+    deletedAt: Timestamp
+    deletedBy: User
+    updatedAt: Timestamp!
+    updatedBy: User
+}
+
+interface MeasurementResult {
+    id: ID!
+    chat: Chat!
+    text: String!
+    createdAt: Timestamp!
+    createdBy: User
+    deletedAt: Timestamp
+    deletedBy: User
+    updatedAt: Timestamp!
+    updatedBy: User
+}
+
+enum MeasurementUnit {
+    CENTIMETER
+    INCH
+    KILO
+    POUNDS
+    REPETITIONS
+    RESOURCE
+}
+
+type Message {
+    id: ID!
+    text: String!
+    resource: Resource
+    replies(filter: ResultsFilter!): [Reply!]!
+    createdAt: Timestamp!
+    createdBy: User
+    deletedAt: Timestamp
+    deletedBy: User
+    updatedAt: Timestamp!
+    updatedBy: User
+}
+
 type Mutation {
     logon: Result
     createChat(input: NewChat!): Chat!
@@ -43,3 +170,547 @@ type Mutation {
     updateWaterfall(input: UpdateWaterfall!): Result
     deleteWaterfall(input: DeleteWaterfall!): Result
 }
+
+input NewChat {
+    description: String
+}
+
+input NewIngredient {
+    name: String!
+    hashtags: [ID!]
+    calories: Float
+    totalFat: Float
+    saturatedFat: Float
+    monounsaturatedFat: Float
+    transFat: Float
+    cholesterol: Float
+    sodium: Float
+    potassium: Float
+    totalCarbohydrate: Float
+    dietaryFiber: Float
+    sugar: Float
+    protein: Float
+}
+
+input NewMeasurement {
+    id: ID!
+    name: String!
+    unit: MeasurementUnit!
+    description: String!
+    hashtags: [ID!]
+}
+
+input NewMessage {
+    chat: ID!
+    text: String!
+}
+
+input NewPermission {
+    name: String!
+    description: String
+    hashtags: [ID!]!
+}
+
+input NewPortion {
+    ingredientId: ID!
+    amount: Float!
+    type: ID!
+}
+
+input NewPortionType {
+    name: String!
+}
+
+input NewPost {
+    text: String!
+    hashtags: [String!]!
+}
+
+input NewRecipe {
+    ingredientId: ID!
+}
+
+input NewReply {
+    chat: ID!
+    text: String!
+}
+
+input NewResource {
+    name: String!
+    thumbnail: String
+    image: String
+    video: String
+    hashtags: [ID!]!
+}
+
+input NewRole {
+    name: String!
+    description: String
+    hashtags: [ID!]!
+}
+
+input NewUser {
+    name: String!
+    displayName: String!
+    email: String!
+    thumbnail: String
+    image: String
+    video: String
+}
+
+input NewWaterfall {
+    text: String!
+    hashtags: [ID!]!
+}
+
+type Notification {
+    id: ID!
+    text: String!
+    Resource: Resource!
+    reference: Reference!
+    createdAt: Timestamp!
+    createdBy: User
+}
+
+type NumericMeasurementResult implements MeasurementResult {
+    id: ID!
+    chat: Chat!
+    text: String!
+    value: Float!
+    createdAt: Timestamp!
+    createdBy: User
+    deletedAt: Timestamp
+    deletedBy: User
+    updatedAt: Timestamp!
+    updatedBy: User
+}
+
+type Permission {
+    id: ID!
+    name: String!
+    hashtags: [Hashtag!]!
+    description: String
+    createdBy: User
+    createdAt: Timestamp!
+    updatedAt: Timestamp!
+    updatedBy: User
+    deletedAt: Timestamp
+    deletedBy: User
+}
+
+type Portion {
+    id: ID!
+    name: String!
+    type: PortionType!
+    hashtags: [ID!]
+    createdAt: Timestamp!
+    createdBy: User!
+    deletedAt: Timestamp
+    deletedBy: User
+    updatedAt: Timestamp!
+    updatedBy: User!
+    amount: Float!
+    calories: Float
+    totalFat: Float
+    saturatedFat: Float
+    monounsaturatedFat: Float
+    transFat: Float
+    cholesterol: Float
+    sodium: Float
+    potassium: Float
+    totalCarbohydrate: Float
+    dietaryFiber: Float
+    sugar: Float
+    protein: Float
+}
+
+type PortionType {
+    id: ID!
+    name: String!
+}
+
+type Post {
+    id: ID!
+    text: String!
+    hashtags: [Hashtag!]!
+    chat: Chat!
+    createdBy: User!
+    createdAt: Timestamp!
+    updatedAt: Timestamp!
+    deletedAt: Timestamp
+    resources: [Resource!]!
+}
+
+type Query {
+    currentUser: User!
+    chatsByUserId(userID: ID!): [Chat!]!
+    chatById(chatID: ID!): Chat!
+    messagesByChatId(chatID: ID!, filter: ResultsFilter!): [Message!]!
+    repliesByMessageId(messageID: ID!, filter: ResultsFilter!): [Reply!]!
+    clinicById(clinicID: ID!): Clinic!
+    clinics: [Clinic!]!
+    ingredients(filter: ResultsFilter): [Ingredient!]!
+    portions(filter: ResultsFilter): [Portion!]!
+    portionTypes(filter: ResultsFilter): [PortionType!]!
+    recipes(filter: ResultsFilter): [Recipe!]!
+    hashtags(filter: ResultsFilter): [Hashtag!]!
+    hashtagsRelatedTo(
+        context: HashtagContext!
+        filter: ResultsFilter
+    ): [Hashtag!]!
+    measurements(filter: ResultsFilter): [Measurement!]!
+    measurementById(id: ID!): Measurement!
+    notificationsByUserId(userID: ID!): [Notification!]!
+    postsByUserId(userId: ID!): [Post!]!
+    resources(filter: ResultsFilter): [Resource!]!
+    resourceById(id: ID!): Resource!
+    roles(filter: ResultsFilter): [Role!]!
+    roleById(id: ID!): Role!
+    permissions(filter: ResultsFilter): [Permission!]!
+    permissionById(id: ID!): Permission!
+    permissionByName(name: String!): Permission!
+    usda: USDAQuery!
+    users(filter: ResultsFilter): [User!]!
+    userById(id: ID!): User!
+    waterfallByUserId(waterfallId: ID!): Waterfall!
+}
+
+type Recipe {
+    id: ID!
+    name: String!
+    hashtags: [ID!]
+    createdAt: Timestamp!
+    createdBy: User
+    deletedAt: Timestamp
+    deletedBy: User
+    updatedAt: Timestamp!
+    updatedBy: User
+    portions: [Portion!]!
+    calories: Float
+    totalFat: Float
+    saturatedFat: Float
+    monounsaturatedFat: Float
+    transFat: Float
+    cholesterol: Float
+    sodium: Float
+    potassium: Float
+    totalCarbohydrate: Float
+    dietaryFiber: Float
+    sugar: Float
+    protein: Float
+}
+
+type Reference {
+    id: String!
+    type: ReferenceType!
+}
+
+enum ReferenceType {
+    POST
+    MESSAGE
+}
+
+type Reply {
+    id: ID!
+    text: String!
+    resource: Resource
+    createdAt: Timestamp!
+    createdBy: User
+    deletedAt: Timestamp
+    deletedBy: User
+    updatedAt: Timestamp!
+    updatedBy: User
+}
+
+type Resource {
+    id: ID!
+    name: String!
+    hashtags: [Hashtag!]!
+    thumbnail: String
+    image: String
+    video: String
+    chat: Chat!
+    createdBy: User
+    createdAt: Timestamp!
+    updatedAt: Timestamp!
+    updatedBy: User
+    deletedAt: Timestamp
+    deletedBy: User
+}
+
+type ResourceMeasurementResult implements MeasurementResult {
+    id: ID!
+    chat: Chat!
+    text: String!
+    value: Resource!
+    createdAt: Timestamp!
+    createdBy: User!
+    deletedAt: Timestamp
+    deletedBy: User
+    updatedAt: Timestamp!
+    updatedBy: User!
+}
+
+type Result {
+    status: ResultStatus!
+}
+
+input ResultsFilter {
+    sortOrder: ResultsOrder
+    sortBy: ResultsSortBy
+    contains: String
+    startsWith: String
+    endsWith: String
+    limit: Int
+    after: Timestamp
+    before: Timestamp
+    hashtags: [ID!]
+}
+
+enum ResultsOrder {
+    Descending
+    Ascending
+}
+
+enum ResultsSortBy {
+    CreatedAt
+    UpdatedAt
+    DeletedAt
+    Name
+}
+
+enum ResultStatus {
+    FAILURE
+    SUCCESS
+}
+
+type Role {
+    id: ID!
+    name: String!
+    hashtags: [Hashtag!]!
+    description: String
+    permissions: [Permission!]!
+    createdBy: User
+    createdAt: Timestamp!
+    updatedAt: Timestamp!
+    updatedBy: User
+    deletedAt: Timestamp
+    deletedBy: User
+}
+
+type TextMeasurementResult implements MeasurementResult {
+    id: ID!
+    chat: Chat!
+    text: String!
+    value: String!
+    createdAt: Timestamp!
+    createdBy: User!
+    deletedAt: Timestamp
+    deletedBy: User
+    updatedAt: Timestamp!
+    updatedBy: User!
+}
+
+scalar Timestamp
+
+input UpdateDependentResource {
+    thumbnail: String
+    image: String
+    video: String
+}
+
+input UpdateIngredient {
+    id: ID!
+    name: String
+    hashtags: [ID!]
+    calories: Float
+    totalFat: Float
+    saturatedFat: Float
+    monounsaturatedFat: Float
+    transFat: Float
+    cholesterol: Float
+    sodium: Float
+    potassium: Float
+    totalCarbohydrate: Float
+    dietaryFiber: Float
+    sugar: Float
+    protein: Float
+}
+
+input UpdateMeasurement {
+    id: ID!
+    name: String
+    description: String
+    hashtags: [ID!]
+}
+
+input UpdateMessage {
+    id: ID!
+    text: String
+}
+
+input UpdatePermission {
+    id: ID!
+    name: String
+    description: String
+    hashtags: [ID!]
+}
+
+input UpdatePortion {
+    id: ID!
+    amount: Float!
+    type: ID!
+}
+
+input UpdatePortionType {
+    id: ID!
+    name: String!
+}
+
+input UpdatePost {
+    id: String!
+    text: String!
+    hashtags: [String!]!
+}
+
+input UpdateRecipe {
+    id: ID!
+}
+
+input UpdateReply {
+    id: ID!
+    text: String
+}
+
+input UpdateResource {
+    id: ID!
+    name: String
+    thumbnail: String
+    image: String
+    video: String
+    hashtags: [ID!]
+}
+
+input UpdateRole {
+    id: ID!
+    name: String
+    description: String
+    hashtags: [ID!]
+}
+
+input UpdateUser {
+    id: ID!
+    name: String
+    displayName: String
+    email: String
+    thumbnail: String
+    image: String
+    video: String
+    hashtags: [ID!]
+    roles: [ID!]
+    profile: UpdateDependentResource
+}
+
+input UpdateWaterfall {
+    id: String!
+    text: String!
+    hashtags: [ID!]!
+}
+
+type USDAIngredient {
+    id: ID!
+    name: String!
+    group: String
+    manufacturer: String
+}
+
+type USDAIngredientResult {
+    id: ID!
+    name: String!
+    group: String
+    manufacturer: String
+}
+
+type USDAQuery {
+    searchIngredients(filter: USDAResultsFilter!): [USDAIngredientResult!]!
+    ingredient(ingredientId: ID!): USDAIngredient
+}
+
+input USDAResultsFilter {
+    wildcard: String!
+}
+
+type User {
+    id: ID!
+    name: String!
+    displayName: String!
+    email: String!
+    thumbnail: String
+    image: String
+    video: String
+    hashtags: [Hashtag!]!
+    roles: [Role!]!
+    notifications: [Notification!]!
+    measurements(input: ResultsFilter): [Measurement!]!
+    resources(filter: ResultsFilter): [Resource!]!
+    chat: Chat!
+    createdAt: Timestamp!
+    updatedAt: Timestamp!
+    deletedAt: Timestamp
+}
+
+type Waterfall {
+    id: ID!
+    text: String!
+    hashtags: [Hashtag!]!
+    events: [WaterfallEvent!]!
+    createdBy: User
+    createdAt: Timestamp!
+    updatedAt: Timestamp!
+    updatedBy: User
+    deletedAt: Timestamp
+    deletedBy: User
+}
+
+interface WaterfallEvent {
+    id: ID!
+    text: String!
+    hashtags: [Hashtag!]!
+    scheduledTo: Timestamp!
+    createdBy: User
+    createdAt: Timestamp!
+    updatedAt: Timestamp!
+    updatedBy: User
+    deletedAt: Timestamp
+    deletedBy: User
+}
+
+type WaterfallMessageEvent implements WaterfallEvent {
+    id: ID!
+    text: String!
+    hashtags: [Hashtag!]!
+    scheduledTo: Timestamp!
+    createdBy: User
+    createdAt: Timestamp!
+    updatedAt: Timestamp!
+    updatedBy: User
+    deletedAt: Timestamp
+    deletedBy: User
+    message: String!
+    resource: Resource
+}
+
+type WaterfallPostEvent implements WaterfallEvent {
+    id: ID!
+    text: String!
+    hashtags: [Hashtag!]!
+    scheduledTo: Timestamp!
+    createdBy: User
+    createdAt: Timestamp!
+    updatedAt: Timestamp!
+    updatedBy: User
+    deletedAt: Timestamp
+    deletedBy: User
+    post: Post!
+}
+
