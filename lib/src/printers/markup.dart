@@ -22,6 +22,17 @@ class MarkupPrinter extends PrinterBase<MarkupPrinterContext> {
   }
 
   @override
+  void visitTypeReference(TypeReference typeReference, MarkupPrinterContext context) {
+    print_tag(
+        context,
+        typeReference,
+        attributes: {
+          "type":typeReference.toValueString()
+        }
+    );
+  }
+
+  @override
   void visitTypeDefinition(TypeDefinition typeDefinition, MarkupPrinterContext context) {
     print_tag(
         context,

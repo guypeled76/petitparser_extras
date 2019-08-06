@@ -15,18 +15,16 @@ void main() async {
     GraphQLParser queryParser = GraphQLParser(schema);
 
     AstNode compilationUnit = queryParser.parseToAst(""" 
-      
-      query {
-      currentUser {
-      id,
-      name
-      },
+      query test {
   users {
     id,
     name, 
     hashtags {
       name
     }
+  }
+  hashtags {
+    id
   }
 }
     """);
