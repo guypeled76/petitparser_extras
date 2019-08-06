@@ -4,16 +4,16 @@ import 'package:petitparser_extras/src/ast/node.dart';
 
 class TypeDefinition extends Definition implements ContainerNode, TypeReference {
 
-  final List<FieldDefinition> fields;
+  final List<MemberDefinition> members;
 
   final TypeReference baseType;
 
   final List<TypeReference> implementedTypes;
 
-  TypeDefinition(String name, this.baseType, this.fields, {this.implementedTypes = const[]}) : super(name);
+  TypeDefinition(String name, this.baseType, this.members, {this.implementedTypes = const[]}) : super(name);
 
   @override
-  List<AstNode> get children => [...this.fields, this.baseType, ...(this.implementedTypes??[])];
+  List<AstNode> get children => [...this.members, this.baseType, ...(this.implementedTypes??[])];
 
   @override
   ResultType visit<ResultType, ContextType>(AstVisitor<ResultType, ContextType> visitor, ContextType context) {
@@ -34,7 +34,7 @@ class TypeDefinition extends Definition implements ContainerNode, TypeReference 
 
   @override
   Iterable<AstNodeScope> generateScopes(AstNodeScope current) sync* {
-    yield* AstNodeScope.generateScopesFromNodes(current, this.fields);
+    yield* AstNodeScope.generateScopesFromNodes(current, this.members);
     yield* baseType?.resolveScope(current)?.scopes ?? [];
   }
 
@@ -61,7 +61,7 @@ class TypeDefinition extends Definition implements ContainerNode, TypeReference 
     return TypeDefinition(
         name,
         transformer.transformNode(this.baseType, context),
-        transformer.transformNodes(this.fields, context),
+        transformer.transformNodes(this.members, context),
         implementedTypes: transformer.transformNodes(this.implementedTypes, context)
     );
 
@@ -86,7 +86,7 @@ class AnonymousTypeReference extends TypeDefinition {
 
     return AnonymousTypeReference(
         transformer.transformNode(this.baseType, context),
-        transformer.transformNodes(this.fields, context),
+        transformer.transformNodes(this.members, context),
         implementedTypes: transformer.transformNodes(this.implementedTypes, context)
     );
   }
@@ -121,7 +121,7 @@ class TypeReference extends AstNode {
 
   bool get isUnknown => false;
 
-  List<FieldDefinition> get fields => const [];
+  List<MemberDefinition> get members => const [];
 
   @override
   String toValueString() {
@@ -229,7 +229,7 @@ class NotNullReference extends TypeReference {
   bool get isNotNull => true;
 
   @override
-  List<FieldDefinition> get fields => element?.fields ?? const [];
+  List<FieldDefinition> get members => element?.members ?? const [];
 
 
   @override

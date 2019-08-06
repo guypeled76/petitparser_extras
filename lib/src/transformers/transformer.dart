@@ -106,6 +106,11 @@ class AstTransformer implements AstVisitor<AstNode, AstTransformerContext> {
     return variableNode.transform(this, context);
   }
 
+  @override
+  AstNode visitMethodDefinition(MethodDefinition methodDefinition, AstTransformerContext context) {
+    return methodDefinition.transform(this, context);
+  }
+
   AstTransformerContext createContext(AstTransformerContext context, AstNode node) {
     return AstTransformerContext(context, node);
   }
@@ -128,6 +133,8 @@ class AstTransformer implements AstVisitor<AstNode, AstTransformerContext> {
   AstNode transform(AstNode input) {
     return input.transform(this, createContext(null, null));
   }
+
+
 
 
 

@@ -18,7 +18,7 @@ class GraphSchemaPrinter extends PrinterBase<GraphSchemaPrinterContext> {
   void visitFieldDefinition(FieldDefinition fieldNode, GraphSchemaPrinterContext context) {
     print_item(fieldNode.name, fieldNode.arguments?.isEmpty ?? true ? context.SpaceAfterStyle : null, context);
     print_list(fieldNode.arguments, context.FieldArgumentsStyle, context);
-    print_list(fieldNode.fields, context.FieldsStyle, context);
+    print_list(fieldNode.members, context.FieldsStyle, context);
   }
 
   void visitExpressionNode(Expression valueNode, GraphSchemaPrinterContext  context) {
@@ -28,7 +28,7 @@ class GraphSchemaPrinter extends PrinterBase<GraphSchemaPrinterContext> {
   void visitTypeDefinitionNode(TypeDefinition typeDefinition, GraphSchemaPrinterContext context) {
     this.print_item(typeDefinition.baseType, context.SpaceAfterStyle, context);
     this.print_item(typeDefinition.name, context.SpaceAfterStyle, context);
-    this.print_list(typeDefinition.fields, context.FieldsStyle, context);
+    this.print_list(typeDefinition.members, context.FieldsStyle, context);
   }
 
   void visitVariableDefinition(VariableDefinition variableNode, GraphSchemaPrinterContext context) {

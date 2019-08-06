@@ -6,6 +6,7 @@
 import 'package:petitparser_extras/src/ast/comment.dart';
 import 'package:petitparser_extras/src/ast/data.dart';
 import 'package:petitparser_extras/src/ast/index.dart';
+import 'package:petitparser_extras/src/ast/method.dart';
 import 'package:petitparser_extras/src/ast/type.dart';
 
 class AstVisitor<ResultType, ContextType> {
@@ -87,6 +88,10 @@ class AstVisitor<ResultType, ContextType> {
   }
 
   ResultType visitArrayExpression(ArrayExpression arrayExpression, ContextType context) {
+    return null;
+  }
+
+  ResultType visitMethodDefinition(MethodDefinition methodDefinition, ContextType context) {
     return null;
   }
 }

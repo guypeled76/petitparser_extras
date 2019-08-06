@@ -24,6 +24,8 @@ export 'scope.dart';
 export 'array.dart';
 export 'object.dart';
 export 'property.dart';
+export 'method.dart';
+export 'member.dart';
 
 export 'package:petitparser_extras/src/visitors/index.dart';
 export 'package:petitparser_extras/src/printers/printer.dart';

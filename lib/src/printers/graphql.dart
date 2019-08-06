@@ -18,7 +18,7 @@ class GraphQLPrinter extends PrinterBase<GraphQLPrinterContext> {
   void visitFieldDefinition(FieldDefinition fieldNode, GraphQLPrinterContext context) {
     print_item(fieldNode.name, fieldNode.arguments?.isEmpty ?? true ? context.SpaceAfterStyle : null, context);
     print_list(fieldNode.arguments, context.FieldArgumentsStyle, context);
-    print_list(fieldNode.fields, context.FieldsStyle, context);
+    print_list(fieldNode.members, context.FieldsStyle, context);
   }
 
   void visitExpressionNode(Expression valueNode, GraphQLPrinterContext  context) {
@@ -28,7 +28,7 @@ class GraphQLPrinter extends PrinterBase<GraphQLPrinterContext> {
   void visitTypeDefinitionNode(TypeDefinition operationNode, GraphQLPrinterContext context) {
     this.print_item(operationNode.baseType, context.SpaceAfterStyle, context);
     this.print_item(operationNode.name, context.SpaceAfterStyle, context);
-    this.print_list(operationNode.fields, context.FieldsStyle, context);
+    this.print_list(operationNode.members, context.FieldsStyle, context);
   }
 
   void visitVariableDefinition(VariableDefinition variableNode, GraphQLPrinterContext context) {

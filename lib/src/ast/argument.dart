@@ -9,7 +9,7 @@ class ArgumentDefinition extends Definition implements Expression {
 
   final TypeReference type;
 
-  ArgumentDefinition(name, this.type, this.value) : super(name);
+  ArgumentDefinition(name, this.type, [this.value]) : super(name);
 
   @override
   ResultType visit<ResultType, ContextType>(AstVisitor<ResultType, ContextType> visitor, ContextType context) {

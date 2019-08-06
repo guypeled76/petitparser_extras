@@ -41,24 +41,11 @@ class MarkupPrinter extends PrinterBase<MarkupPrinterContext> {
           "name":typeDefinition.name,
           "baseType":typeDefinition.baseType
         },
-        content: typeDefinition.fields
+        content: typeDefinition.members
 
     );
   }
 
-  @override
-  void visitArgumentDefinition(ArgumentDefinition argumentNode, MarkupPrinterContext context) {
-    print_tag(
-        context,
-        argumentNode,
-        attributes: {
-          "name": argumentNode.name,
-          "type": argumentNode.type,
-          "value": argumentNode.value
-        },
-        content: [argumentNode.value]
-    );
-  }
 
   @override
   void visitFieldDefinition(FieldDefinition fieldDefinition, MarkupPrinterContext context) {
@@ -67,7 +54,7 @@ class MarkupPrinter extends PrinterBase<MarkupPrinterContext> {
         fieldDefinition,
         content: [
           ...fieldDefinition.arguments??[],
-          ...fieldDefinition.fields??[]
+          ...fieldDefinition.members??[]
         ],
         attributes: {
           "name": fieldDefinition.name,
@@ -95,20 +82,53 @@ class MarkupPrinter extends PrinterBase<MarkupPrinterContext> {
   }
 
   @override
+  void visitMethodDefinition(MethodDefinition methodDefinition, MarkupPrinterContext context) {
+    print_tag(
+        context,
+        methodDefinition,
+        attributes: {
+          "name": methodDefinition.name,
+          "type": methodDefinition.typeReference
+        },
+        content: [...methodDefinition.arguments??[]]
+    );
+  }
+
+  @override
   void visitObjectProperty(ObjectProperty objectProperty, MarkupPrinterContext context) {
+
+    var value = objectProperty.value?.toValueString();
+
     print_tag(
         context,
         objectProperty,
         attributes: {
-          "name":objectProperty.name
+          "name":objectProperty.name,
+          "value": value
         },
-        content: [objectProperty.value]
+        content: value == null ? [objectProperty.value] : null
     );
   }
 
 
 
-  
+
+  @override
+  void visitArgumentDefinition(ArgumentDefinition argumentNode, MarkupPrinterContext context) {
+
+    var value = argumentNode.value?.toValueString();
+
+    print_tag(
+        context,
+        argumentNode,
+        attributes: {
+          "name": argumentNode.name,
+          "type": argumentNode.type,
+          "value": value
+        },
+        content: value == null ? [argumentNode.value] : null
+    );
+  }
 
 
 }
