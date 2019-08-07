@@ -10,7 +10,9 @@ class TypeDefinition extends Definition implements ContainerNode, TypeReference 
 
   final List<TypeReference> implementedTypes;
 
-  TypeDefinition(String name, this.baseType, this.members, {this.implementedTypes = const[]}) : super(name);
+  final List<TypeReference> generics;
+
+  TypeDefinition(String name, this.baseType, this.members, {this.implementedTypes = const[], this.generics = const[]}) : super(name);
 
   @override
   List<AstNode> get children => [...this.members, this.baseType, ...(this.implementedTypes??[])];
@@ -71,6 +73,8 @@ class TypeDefinition extends Definition implements ContainerNode, TypeReference 
   String toValueString() {
     return this.name;
   }
+
+
 }
 
 class AnonymousTypeReference extends TypeDefinition {
@@ -102,7 +106,9 @@ class TypeReference extends AstNode {
 
   final String name;
 
-  TypeReference(this.name);
+  final List<TypeReference> generics;
+
+  TypeReference(this.name, [this.generics]);
 
   @override
   ResultType visit<ResultType, ContextType>(AstVisitor<ResultType, ContextType> visitor, ContextType context) {

@@ -26,7 +26,7 @@ class FieldDefinition extends MemberDefinition implements ContainerNode {
     yield* typeReference?.resolveScope(current)?.scopes ?? [];
   }
 
-
+  @override
   List<MemberDefinition> get members {
     if(typeReference is TypeDefinition) {
       return (typeReference as TypeDefinition).members;

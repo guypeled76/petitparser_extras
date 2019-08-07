@@ -2,9 +2,22 @@
 
 
 import 'package:petitparser_extras/petitparser_extras.dart';
+import 'package:petitparser_extras/src/ast/invocation.dart';
+import 'package:petitparser_extras/src/ast/statement.dart';
 
 class AstTransformer implements AstVisitor<AstNode, AstTransformerContext> {
 
+
+  @override
+  AstNode visitInvocationExpression(InvocationExpression invocationExpression, AstTransformerContext context) {
+    return invocationExpression.transform(this, context);
+  }
+
+
+  @override
+  AstNode visitReturnStatement(ReturnStatement returnStatement, AstTransformerContext context) {
+    return returnStatement.transform(this, context);
+  }
 
   @override
   AstNode visitArrayExpression(ArrayExpression arrayExpression, AstTransformerContext context) {
@@ -111,6 +124,11 @@ class AstTransformer implements AstVisitor<AstNode, AstTransformerContext> {
     return methodDefinition.transform(this, context);
   }
 
+  @override
+  AstNode visitMemberReferenceExpression(MemberReferenceExpression memberReferenceExpression, AstTransformerContext context) {
+    return memberReferenceExpression.transform(this, context);
+  }
+
   AstTransformerContext createContext(AstTransformerContext context, AstNode node) {
     return AstTransformerContext(context, node);
   }
@@ -133,6 +151,10 @@ class AstTransformer implements AstVisitor<AstNode, AstTransformerContext> {
   AstNode transform(AstNode input) {
     return input.transform(this, createContext(null, null));
   }
+
+
+
+
 
 
 

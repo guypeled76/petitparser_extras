@@ -26,6 +26,8 @@ export 'object.dart';
 export 'property.dart';
 export 'method.dart';
 export 'member.dart';
+export 'statement.dart';
+export 'invocation.dart';
 
 export 'package:petitparser_extras/src/visitors/index.dart';
 export 'package:petitparser_extras/src/printers/printer.dart';

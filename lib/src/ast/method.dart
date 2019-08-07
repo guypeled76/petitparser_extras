@@ -10,7 +10,9 @@ class MethodDefinition extends MemberDefinition implements ContainerNode {
 
   final TypeReference typeReference;
 
-  MethodDefinition(String name, this.typeReference, this.arguments, {this.directives = const []}) : super(name);
+  final Statement body;
+
+  MethodDefinition(String name, this.body, this.typeReference, this.arguments, {this.directives = const []}) : super(name);
 
   @override
   List<AstNode> get children => <AstNode>[typeReference, ...arguments ?? [], ...directives ?? []];
@@ -33,6 +35,7 @@ class MethodDefinition extends MemberDefinition implements ContainerNode {
 
     return MethodDefinition(
         name,
+        transformer.transformNode(this.body, context),
         transformer.transformNode(this.typeReference, context),
         transformer.transformNodes(this.arguments, context),
         directives: transformer.transformNodes(this.directives, context)
