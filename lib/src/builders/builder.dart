@@ -85,7 +85,7 @@ class AstBuilder {
   static Parser as_identifierExpression(Parser parser) {
     return parser.trim().map((value) =>
         IdentifierExpression(
-            value
+            as_name(value)
         )
     );
   }
@@ -93,7 +93,7 @@ class AstBuilder {
   static Parser as_variableDefinition(Parser parser) {
     return parser.trim().map((value) =>
         VariableDefinition(
-            value
+            as_name(value)
         )
     );
   }

@@ -16,14 +16,14 @@ void main() async {
 
     AstNode compilationUnit = queryParser.parseToAst(""" 
       query test {
-  users {
+  users(filter:{contains:\$dd}) {
     id,
     name, 
     hashtags {
       name
     }
   }
-  hashtags {
+  userById(id:\$id) {
     id
   }
 }

@@ -16,14 +16,14 @@ void main() async {
 
     AstNode compilationUnit = queryParser.parseToAst(""" 
       query test {
-  users(filter: {contains:"g"}) {
+  users(filter: {contains:\$name}) {
     id,
     name, 
     hashtags {
       name
     }
   },
-  userById(id:"3") {
+  userById(id:\$id) {
     id
   }
 }
@@ -55,39 +55,51 @@ abstract class GraphQLClientUtils {
   }
 }
 
-class _client  {
+class ClientCommand  {
+
+  ClientData execute(Object provider, String name) {
+    return _create_data(null);
+  }
   
-  _Data _process(Map<String, Object> data) {
-    return _Data(
-        GraphQLClientUtils.as_value_list(data, "users", _create_users_item),
-        GraphQLClientUtils.as_value(data, "userById")
+  ClientData _create_data(Map<String, Object> data) {
+    return ClientData(
+        GraphQLClientUtils.as_value_list<ClientUser>(data, "users", _create_data_users),
+        GraphQLClientUtils.as_value<ClientUser>(data, "userById")
     );
   }
   
-  _User _create_users_item(Map<String, Object> data) {
-    return _User(
-        GraphQLClientUtils.as_value(data, "id"),
-        GraphQLClientUtils.as_value(data,"name"),
-        GraphQLClientUtils.as_value_list(data, "hashtags", _create_hashtags_item));
+  ClientUser _create_data_users(Map<String, Object> data) {
+    return ClientUser(
+        GraphQLClientUtils.as_value<String>(data, "id"),
+        GraphQLClientUtils.as_value<String>(data,"name"),
+        GraphQLClientUtils.as_value_list<ClientHashtag>(data, "hashtags", _create_data_users_hashtags)
+    );
   }
 
-  _Hashtag _create_hashtags_item(Map<String, Object> data) {
-    return _Hashtag(
-        GraphQLClientUtils.as_value(data, "name")
+  ClientHashtag _create_data_users_hashtags(Map<String, Object> data) {
+    return ClientHashtag(
+        GraphQLClientUtils.as_value<String>(data, "name")
     );
   }
 
 }
 
-class _Data {
-  _Data(List<_User> users, _User userById);
+class ClientData {
+  final List<ClientUser> users;
+  final ClientUser userById;
+  ClientData(this.users, this.userById);
 }
-class _User {
-  _User(String id, String name, List<_Hashtag> hashtags);
+
+class ClientUser {
+  final String id;
+  final String name;
+  final List<ClientHashtag> hashtags;
+  ClientUser(this.id, this.name, this.hashtags);
 
 }
 
-class _Hashtag {
-  _Hashtag(String name);
+class ClientHashtag {
+  final String name;
+  ClientHashtag(this.name);
 
 }
