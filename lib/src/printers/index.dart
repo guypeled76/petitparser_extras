@@ -5,3 +5,4 @@ export 'prometheus.dart';
 export 'printer.dart';
 export 'json.dart';
 export 'markup.dart';
+export 'dart.dart';

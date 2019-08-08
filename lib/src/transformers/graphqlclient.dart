@@ -27,10 +27,34 @@ class GraphQLClientTransformer extends AstTransformer {
   }
 
   Iterable<MemberDefinition> createClientMembersFromField(FieldDefinition field, AstTransformerContext context) sync* {
+    
+    String methodName = getMethodName(field, context);
+
+    String methodItemName = methodName + "_item";
+    
     yield MethodDefinition(
-        getMethodName(field, context),
+        methodName,
+        ReturnStatement(
+            InvocationExpression(
+                MemberReferenceExpression(
+                    IdentifierExpression("Utils"), "as_value"
+                ),
+                [IdentifierExpression("data"), IdentifierExpression("b")]
+            )
+        ),
+        field.typeReference,
+        [ArgumentDefinition("data",
+            TypeReference("Map", [
+              TypeReference("String"),
+              TypeReference("Object")
+            ])
+        )]
+    );
+
+    yield MethodDefinition(
+        methodItemName,
         null,
-        getMethodType(field, context),
+        field.typeReference,
         getMethodArguments(field, context)
     );
 
@@ -53,11 +77,7 @@ class GraphQLClientTransformer extends AstTransformer {
     if(context is GraphQLClientTransformerContext && context.hasFields){
       parents = "_${context.fieldPath.join("_")}_";
     }
-    return "generate${parents}${fieldDefinition.name}";
-  }
-
-  TypeReference getMethodType(FieldDefinition fieldDefinition, AstTransformerContext context) {
-    return fieldDefinition.typeReference;
+    return "_generate${parents}${fieldDefinition.name}";
   }
 
 

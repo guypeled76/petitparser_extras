@@ -90,7 +90,7 @@ class MarkupPrinter extends PrinterBase<MarkupPrinterContext> {
           "name": methodDefinition.name,
           "type": methodDefinition.typeReference
         },
-        content: [...methodDefinition.arguments??[]]
+        content: [...methodDefinition.arguments??[], methodDefinition.body]
     );
   }
 
@@ -110,7 +110,53 @@ class MarkupPrinter extends PrinterBase<MarkupPrinterContext> {
     );
   }
 
+  @override
+  void visitReturnStatement(ReturnStatement returnStatement, MarkupPrinterContext context) {
+    print_tag(
+      context,
+      returnStatement,
+      content: [
+        returnStatement.expression
+      ]
+    );
+  }
 
+  @override
+  void visitInvocationExpression(InvocationExpression invocationExpression, MarkupPrinterContext context) {
+    print_tag(
+        context,
+        invocationExpression,
+        content: [
+          invocationExpression.target,
+          ...invocationExpression.arguments??[]
+        ]
+    );
+  }
+
+  @override
+  void visitMemberReferenceExpression(MemberReferenceExpression memberReferenceExpression, MarkupPrinterContext context) {
+    print_tag(
+        context,
+        memberReferenceExpression,
+        attributes: {
+          "member": memberReferenceExpression.member
+        },
+        content: [
+          memberReferenceExpression.target
+        ]
+    );
+  }
+
+  @override
+  void visitIdentifierExpression(IdentifierExpression identifierNode, MarkupPrinterContext context) {
+    print_tag(
+        context,
+        identifierNode,
+        attributes: {
+          "identifier": identifierNode.identifier,
+        },
+    );
+  }
 
 
   @override

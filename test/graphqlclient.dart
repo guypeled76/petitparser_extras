@@ -32,7 +32,12 @@ void main() async {
     if (queryParser.lastException != null) {
       print("${queryParser.lastException}");
     } else {
-      print("result:\n${compilationUnit.toMarkupString()}");
+      //print("result:\n${compilationUnit.toMarkupString()}");
+
+      DartPrinter printer = DartPrinter();
+
+
+      print("code:\n${printer.print(compilationUnit, true)}");
     }
   });
 }
@@ -50,8 +55,12 @@ abstract class GraphQLClientUtils {
     return as_list(data, name).map((item) => creator(item)).toList();
   }
 
-  static ValueType as_value<ValueType>(Map<String, Object> data, String name) {
-    return null;
+  static ValueType as_value<ValueType>(Map<String, Object> data, String name, [ValueType defaultValue]) {
+    var value = data[name];
+    if(value is ValueType) {
+      return value;
+    }
+    return defaultValue;
   }
 }
 
