@@ -9,7 +9,7 @@ class InvocationExpression extends Expression{
 
   final List<Expression> arguments;
 
-  InvocationExpression(this.target, this.arguments);
+  InvocationExpression(this.target, [this.arguments = const[]]);
 
   @override
   AstNode transform(AstTransformer transformer, AstTransformerContext context) {

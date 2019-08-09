@@ -28,6 +28,11 @@ class DartPrinter extends PrinterBase<DartPrinterContext> {
   }
 
   @override
+  void visitThisReferenceExpression(ThisReferenceExpression thisReferenceExpression, DartPrinterContext context) {
+    print_value("this", context);
+  }
+
+  @override
   void visitInvocationExpression(InvocationExpression invocationExpression, DartPrinterContext context) {
     print_item(invocationExpression.target, null, context);
     print_list(invocationExpression.arguments, context.ArgumentsStyle, context);
@@ -36,6 +41,7 @@ class DartPrinter extends PrinterBase<DartPrinterContext> {
   @override
   void visitIdentifierExpression(IdentifierExpression identifierNode, DartPrinterContext context) {
     print_value(identifierNode.identifier, context);
+    print_list(identifierNode.generics, context.GenericsStyle, context);
   }
 
   @override

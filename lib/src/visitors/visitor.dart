@@ -9,6 +9,7 @@ import 'package:petitparser_extras/src/ast/index.dart';
 import 'package:petitparser_extras/src/ast/invocation.dart';
 import 'package:petitparser_extras/src/ast/method.dart';
 import 'package:petitparser_extras/src/ast/statement.dart';
+import 'package:petitparser_extras/src/ast/this.dart';
 import 'package:petitparser_extras/src/ast/type.dart';
 
 class AstVisitor<ResultType, ContextType> {
@@ -106,6 +107,10 @@ class AstVisitor<ResultType, ContextType> {
   }
 
   ResultType visitInvocationExpression(InvocationExpression invocationExpression, ContextType context) {
+    return null;
+  }
+
+  ResultType visitThisReferenceExpression(ThisReferenceExpression thisReferenceExpression, ContextType context) {
     return null;
   }
 }

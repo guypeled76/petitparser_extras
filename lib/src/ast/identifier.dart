@@ -9,7 +9,9 @@ import 'index.dart';
 class IdentifierExpression extends Expression {
   final String identifier;
 
-  IdentifierExpression(this.identifier);
+  final List<TypeReference> generics;
+
+  IdentifierExpression(this.identifier, [this.generics = const []]);
 
   @override
   ResultType visit<ResultType, ContextType>(AstVisitor<ResultType, ContextType> visitor, ContextType context) {

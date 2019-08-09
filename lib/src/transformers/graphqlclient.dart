@@ -4,6 +4,9 @@ import 'package:petitparser_extras/petitparser_extras.dart';
 
 class GraphQLClientTransformer extends AstTransformer {
 
+  final GraphQLClientBuilder builder;
+
+  GraphQLClientTransformer(this.builder);
 
   @override
   AstTransformerContext createContext(AstTransformerContext context, AstNode node) {
@@ -28,57 +31,37 @@ class GraphQLClientTransformer extends AstTransformer {
 
   Iterable<MemberDefinition> createClientMembersFromField(FieldDefinition field, AstTransformerContext context) sync* {
     
-    String methodName = getMethodName(field, context);
+    GraphQLClientFieldConfig fieldConfig = GraphQLClientFieldConfig.create(field, context);
 
-    String methodItemName = methodName + "_item";
     
     yield MethodDefinition(
-        methodName,
+        fieldConfig.fromJsonMethodName,
         ReturnStatement(
-            InvocationExpression(
-                MemberReferenceExpression(
-                    IdentifierExpression("Utils"), "as_value"
-                ),
-                [IdentifierExpression("data"), IdentifierExpression("b")]
-            )
+            fieldConfig.hasFields ?
+    builder.createItemMethodInvocationFromField(fieldConfig, context) :
+                builder.getValueFromJson(fieldConfig)
+
         ),
         field.typeReference,
-        [ArgumentDefinition("data",
-            TypeReference("Map", [
-              TypeReference("String"),
-              TypeReference("Object")
-            ])
-        )]
+        [builder.jsonArgument]
     );
 
-    yield MethodDefinition(
-        methodItemName,
-        null,
-        field.typeReference,
-        getMethodArguments(field, context)
-    );
+    if(fieldConfig.hasFields) {
+      yield MethodDefinition(
+          fieldConfig.fromDataMethodName,
+          ReturnStatement(PrimitiveExpression(null)),
+          builder.resolveItemTypeReference(field.typeReference),
+          builder.createArgumentsFromField(fieldConfig, context)
+      );
+    }
 
-    yield* field
-        .members
-        .whereType<FieldDefinition>()
+    yield* fieldConfig.fields
         .expand((fieldMember) => createClientMembersFromField(fieldMember, createContext(context, field)));
   }
 
-  List<ArgumentDefinition> getMethodArguments(FieldDefinition fieldDefinition, AstTransformerContext context) {
-    return fieldDefinition
-        .members
-        .whereType<FieldDefinition>()
-        .map((field) => ArgumentDefinition(field.name, field.typeReference))
-        .toList(growable: false);
-  }
 
-  String getMethodName(FieldDefinition fieldDefinition, AstTransformerContext context) {
-    var parents = "_";
-    if(context is GraphQLClientTransformerContext && context.hasFields){
-      parents = "_${context.fieldPath.join("_")}_";
-    }
-    return "_generate${parents}${fieldDefinition.name}";
-  }
+
+
 
 
 
@@ -100,3 +83,4 @@ class GraphQLClientTransformerContext extends AstTransformerContext {
   bool get hasFields => this.nodePath.whereType<FieldDefinition>().isNotEmpty;
 
 }
+
