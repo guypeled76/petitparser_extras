@@ -26,23 +26,7 @@ class GraphQLClientBuilder {
     );
   }
 
-  TypeReference resolveItemTypeReference(TypeReference typeReference) {
-    if(typeReference is AnonymousTypeReference) {
-      return resolveItemTypeReference(typeReference.baseType);
-    }
-    if(typeReference is TypeDefinition) {
-      return TypeReference(typeReference.name);
-    }
-    if(typeReference is ArrayTypeReference) {
-      return resolveItemTypeReference(typeReference.element);
-    }
 
-    if(typeReference is NotNullReference) {
-      return resolveItemTypeReference(typeReference.element);
-    }
-
-    return typeReference;
-  }
 
   Expression getValueFromJson(GraphQLClientFieldConfig fieldConfig) {
     return InvocationExpression(IdentifierExpression("as_value", [fieldConfig.typeReference]), [jsonIdentifier, PrimitiveExpression(fieldConfig.name)]);
@@ -59,17 +43,25 @@ class GraphQLClientBuilder {
   createFromJsonMethod(GraphQLClientFieldConfig fieldConfig) {
     return MethodDefinition(
         fieldConfig.fromJsonMethodName,
-        ReturnStatement(this.fromJsonValueExpression(fieldConfig)),
+        createFromJsonMethodBody(fieldConfig),
         fieldConfig.typeReference,
         [this.jsonArgument]
     );
+  }
+
+  ReturnStatement createFromJsonMethodBody(GraphQLClientFieldConfig fieldConfig) {
+    if(fieldConfig.isArray) {
+      return ReturnStatement(InvocationExpression(IdentifierExpression("isArray"), [this.fromJsonValueExpression(fieldConfig)]));
+    } else {
+      return ReturnStatement(this.fromJsonValueExpression(fieldConfig));
+    }
   }
 
   createFromDataMethod(GraphQLClientFieldConfig fieldConfig) {
     return MethodDefinition(
         fieldConfig.fromDataMethodName,
         ReturnStatement(PrimitiveExpression(null)),
-        this.resolveItemTypeReference(fieldConfig.typeReference),
+        fieldConfig.resolveItemTypeReference(),
         this.createArgumentsFromField(fieldConfig)
     );
   }
@@ -78,19 +70,47 @@ class GraphQLClientBuilder {
 
 class GraphQLClientFieldConfig {
 
-  final String name;
+  final String methodName;
 
   final FieldDefinition field;
 
-  GraphQLClientFieldConfig(this.name, this.field);
+  GraphQLClientFieldConfig(this.methodName, this.field);
+
+  String get name {
+    return field.name;
+  }
 
   String get fromJsonMethodName {
-    return "${name}FromJson";
+    return "${methodName}FromJson";
   }
 
   String get fromDataMethodName {
-    return "${name}FromData";
+    return "${methodName}FromData";
   }
+
+  TypeReference resolveItemTypeReference() {
+
+    TypeReference currentType = typeReference;
+
+    while(currentType != null) {
+      if (currentType is AnonymousTypeReference) {
+        currentType = typeReference.baseType;
+        currentType = typeReference.baseType;
+      } else if (currentType is TypeDefinition) {
+        return TypeReference(currentType.name);
+      } else if (currentType is ArrayTypeReference) {
+        currentType = currentType.element;
+      } else if (currentType is NotNullReference) {
+        currentType = currentType.element;
+      } else {
+        return typeReference;
+      }
+    }
+
+    return currentType;
+  }
+
+  bool get isArray => typeReference.isArray;
 
   static GraphQLClientFieldConfig create(FieldDefinition field, AstTransformerContext context) {
 

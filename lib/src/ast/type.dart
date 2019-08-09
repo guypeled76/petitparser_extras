@@ -41,7 +41,7 @@ class TypeDefinition extends Definition implements ContainerNode, TypeReference 
   }
 
   @override
-  bool get isArray => false;
+  bool get isArray => baseType?.isArray ?? false;
 
   @override
   bool get isNotNull => false;
