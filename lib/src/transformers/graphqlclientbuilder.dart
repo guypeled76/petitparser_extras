@@ -16,7 +16,7 @@ class GraphQLClientBuilder {
 
   InvocationExpression createInstanceFromJson(GraphQLClientFieldConfig fieldConfig) {
     return InvocationExpression(
-        MemberReferenceExpression(ThisReferenceExpression(), fieldConfig.fromDataMethodName),
+        MemberReferenceExpression(ThisReferenceExpression(), fieldConfig.instanceFromDataMethodName),
         fieldConfig.createListFromFields(
                 (field) =>
                     InvocationExpression(
@@ -40,26 +40,37 @@ class GraphQLClientBuilder {
     }
   }
 
-  createFromJsonMethod(GraphQLClientFieldConfig fieldConfig) {
+  createInstanceFromJsonMethod(GraphQLClientFieldConfig fieldConfig) {
     return MethodDefinition(
-        fieldConfig.fromJsonMethodName,
-        createFromJsonMethodBody(fieldConfig),
+        fieldConfig.instanceFromJsonMethodName,
+        ReturnStatement(this.fromJsonValueExpression(fieldConfig)),
+        fieldConfig.resolveItemTypeReference(),
+        [this.jsonArgument]
+    );
+  }
+
+  createListFromJsonMethod(GraphQLClientFieldConfig fieldConfig) {
+    return MethodDefinition(
+        fieldConfig.listFromJsonMethodName,
+        ReturnStatement(
+          InvocationExpression(
+          MemberReferenceExpression(
+            InvocationExpression(
+              MemberReferenceExpression(
+                  InvocationExpression(IdentifierExpression("as_list"),[jsonIdentifier, PrimitiveExpression(fieldConfig.name)]),
+                  "map"
+              ),
+              [IdentifierExpression(fieldConfig.instanceFromJsonMethodName)]
+          ), "toList"))),
         fieldConfig.typeReference,
         [this.jsonArgument]
     );
   }
 
-  ReturnStatement createFromJsonMethodBody(GraphQLClientFieldConfig fieldConfig) {
-    if(fieldConfig.isArray) {
-      return ReturnStatement(InvocationExpression(IdentifierExpression("isArray"), [this.fromJsonValueExpression(fieldConfig)]));
-    } else {
-      return ReturnStatement(this.fromJsonValueExpression(fieldConfig));
-    }
-  }
 
   createFromDataMethod(GraphQLClientFieldConfig fieldConfig) {
     return MethodDefinition(
-        fieldConfig.fromDataMethodName,
+        fieldConfig.instanceFromDataMethodName,
         ReturnStatement(PrimitiveExpression(null)),
         fieldConfig.resolveItemTypeReference(),
         this.createArgumentsFromField(fieldConfig)
@@ -80,12 +91,16 @@ class GraphQLClientFieldConfig {
     return field.name;
   }
 
-  String get fromJsonMethodName {
-    return "${methodName}FromJson";
+  String get instanceFromJsonMethodName {
+    return "${methodName}InstanceFromJson";
   }
 
-  String get fromDataMethodName {
-    return "${methodName}FromData";
+  String get listFromJsonMethodName {
+    return "${methodName}ListFromJson";
+  }
+
+  String get instanceFromDataMethodName {
+    return "${methodName}InstanceFromData";
   }
 
   TypeReference resolveItemTypeReference() {

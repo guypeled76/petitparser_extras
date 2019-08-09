@@ -33,7 +33,11 @@ class GraphQLClientTransformer extends AstTransformer {
     
     GraphQLClientFieldConfig fieldConfig = GraphQLClientFieldConfig.create(field, context);
 
-    yield builder.createFromJsonMethod(fieldConfig);
+    if(fieldConfig.isArray) {
+      yield builder.createListFromJsonMethod(fieldConfig);
+    }
+
+    yield builder.createInstanceFromJsonMethod(fieldConfig);
 
     if(fieldConfig.hasFields) {
       yield builder.createFromDataMethod(fieldConfig);
