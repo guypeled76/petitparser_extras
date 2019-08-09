@@ -79,7 +79,7 @@ class TypeDefinition extends Definition implements ContainerNode, TypeReference 
 
 class AnonymousTypeReference extends TypeDefinition {
 
-  AnonymousTypeReference(TypeReference baseType, List<FieldDefinition> fields, {List<TypeReference> implementedTypes = const[]}) : super("?", baseType, fields, implementedTypes:implementedTypes);
+  AnonymousTypeReference(TypeReference baseType, List<MemberDefinition> members, {List<TypeReference> implementedTypes = const[]}) : super("?", baseType, members, implementedTypes:implementedTypes);
 
   @override
   bool get isAnonymous => true;

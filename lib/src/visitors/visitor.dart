@@ -6,6 +6,7 @@
 import 'package:petitparser_extras/src/ast/comment.dart';
 import 'package:petitparser_extras/src/ast/data.dart';
 import 'package:petitparser_extras/src/ast/index.dart';
+import 'package:petitparser_extras/src/ast/indexer.dart';
 import 'package:petitparser_extras/src/ast/invocation.dart';
 import 'package:petitparser_extras/src/ast/method.dart';
 import 'package:petitparser_extras/src/ast/statement.dart';
@@ -111,6 +112,14 @@ class AstVisitor<ResultType, ContextType> {
   }
 
   ResultType visitThisReferenceExpression(ThisReferenceExpression thisReferenceExpression, ContextType context) {
+    return null;
+  }
+
+  ResultType visitIndexerExpression(IndexerExpression indexerExpression, ContextType context) {
+    return null;
+  }
+
+  ResultType visitCastExpression(CastExpression castExpression, ContextType context) {
     return null;
   }
 }

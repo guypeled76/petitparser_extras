@@ -2,11 +2,23 @@
 
 
 import 'package:petitparser_extras/petitparser_extras.dart';
+import 'package:petitparser_extras/src/ast/indexer.dart';
 import 'package:petitparser_extras/src/ast/invocation.dart';
 import 'package:petitparser_extras/src/ast/statement.dart';
 import 'package:petitparser_extras/src/ast/this.dart';
 
 class AstTransformer implements AstVisitor<AstNode, AstTransformerContext> {
+
+
+  @override
+  AstNode visitCastExpression(CastExpression castExpression, AstTransformerContext context) {
+    return castExpression.transform(this, context);
+  }
+
+  @override
+  AstNode visitIndexerExpression(IndexerExpression indexerExpression, AstTransformerContext context) {
+    return indexerExpression.transform(this, context);
+  }
 
 
   @override
@@ -158,15 +170,6 @@ class AstTransformer implements AstVisitor<AstNode, AstTransformerContext> {
   AstNode transform(AstNode input) {
     return input.transform(this, createContext(null, null));
   }
-
-
-
-
-
-
-
-
-
 
 }
 

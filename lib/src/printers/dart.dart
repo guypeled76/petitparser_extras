@@ -33,15 +33,31 @@ class DartPrinter extends PrinterBase<DartPrinterContext> {
   }
 
   @override
+  void visitCastExpression(CastExpression castExpression, DartPrinterContext context) {
+    print_items([castExpression.target, " as ",castExpression.type], context);
+  }
+
+  @override
   void visitInvocationExpression(InvocationExpression invocationExpression, DartPrinterContext context) {
     print_item(invocationExpression.target, null, context);
-    print_list(invocationExpression.arguments, context.ArgumentsStyle, context);
+    print_list(invocationExpression.arguments, context.InvocationArgumentsStyle, context);
+  }
+
+  @override
+  void visitIndexerExpression(IndexerExpression indexerExpression, DartPrinterContext context) {
+    print_item(indexerExpression.target, null, context);
+    print_list(indexerExpression.arguments, context.IndexerArgumentsStyle, context);
   }
 
   @override
   void visitIdentifierExpression(IdentifierExpression identifierNode, DartPrinterContext context) {
     print_value(identifierNode.identifier, context);
     print_list(identifierNode.generics, context.GenericsStyle, context);
+  }
+
+  @override
+  void visitParenthesisExpression(ParenthesisExpression parenthesisNode, DartPrinterContext context) {
+    print_items(["(", parenthesisNode.expression,")"], context);
   }
 
   @override
@@ -90,7 +106,7 @@ class DartPrinter extends PrinterBase<DartPrinterContext> {
   @override
   void visitMethodDefinition(MethodDefinition methodDefinition, DartPrinterContext context) {
     print_items([methodDefinition.typeReference ??"void", " ", methodDefinition.name], context);
-    print_list(methodDefinition.arguments, context.ArgumentsStyle, context);
+    print_list(methodDefinition.arguments, context.InvocationArgumentsStyle, context);
     print_items([" {\n\t\t", methodDefinition.body, "\n\t}\n"], context);
   }
 
@@ -111,11 +127,18 @@ class DartPrinterContext extends PrintContext {
       after: "\n"
   );
 
-  PrintListStyle get ArgumentsStyle => PrintListStyle(
+  PrintListStyle get InvocationArgumentsStyle => PrintListStyle(
     separator: ", ",
     before: "(",
     after: ")",
     printIfEmpty: true
+  );
+
+  PrintListStyle get IndexerArgumentsStyle => PrintListStyle(
+      separator: ", ",
+      before: "[",
+      after: "]",
+      printIfEmpty: true
   );
 
   PrintItemStyle get MethodBodyStyle => PrintItemStyle(

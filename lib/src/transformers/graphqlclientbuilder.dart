@@ -13,6 +13,10 @@ class GraphQLClientBuilder {
     return fieldConfig.createListFromFields((field) => ArgumentDefinition(field.name, field.typeReference));
   }
 
+  List<IdentifierExpression> createArgumentReferencesFromField(GraphQLClientFieldConfig fieldConfig) {
+    return fieldConfig.createListFromFields((field) => IdentifierExpression(field.name));
+  }
+
 
   InvocationExpression createInstanceFromJson(GraphQLClientFieldConfig fieldConfig) {
     return InvocationExpression(
@@ -36,7 +40,7 @@ class GraphQLClientBuilder {
     if(fieldConfig.hasFields) {
       return this.createInstanceFromJson(fieldConfig);
     } else {
-      return this.getValueFromJson(fieldConfig);
+      return ParenthesisExpression(this.getValueFromJson(fieldConfig));
     }
   }
 
@@ -57,7 +61,7 @@ class GraphQLClientBuilder {
           MemberReferenceExpression(
             InvocationExpression(
               MemberReferenceExpression(
-                  InvocationExpression(IdentifierExpression("as_list"),[jsonIdentifier, PrimitiveExpression(fieldConfig.name)]),
+                  ParenthesisExpression(CastExpression(IndexerExpression(jsonIdentifier,[PrimitiveExpression(fieldConfig.name)]),TypeReference("List"))),
                   "map"
               ),
               [IdentifierExpression(fieldConfig.instanceFromJsonMethodName)]
@@ -71,9 +75,19 @@ class GraphQLClientBuilder {
   createFromDataMethod(GraphQLClientFieldConfig fieldConfig) {
     return MethodDefinition(
         fieldConfig.instanceFromDataMethodName,
-        ReturnStatement(PrimitiveExpression(null)),
+        ReturnStatement(InvocationExpression(IdentifierExpression(fieldConfig.resolveItemTypeReference().name), this.createArgumentReferencesFromField(fieldConfig))),
         fieldConfig.resolveItemTypeReference(),
         this.createArgumentsFromField(fieldConfig)
+    );
+  }
+
+  FieldDefinition createDataField(TypeDefinition typeDefinition) {
+    return FieldDefinition(
+        "data",
+        AnonymousTypeReference(
+            TypeReference("Data"),
+            typeDefinition.members
+        )
     );
   }
 }
@@ -110,7 +124,6 @@ class GraphQLClientFieldConfig {
     while(currentType != null) {
       if (currentType is AnonymousTypeReference) {
         currentType = typeReference.baseType;
-        currentType = typeReference.baseType;
       } else if (currentType is TypeDefinition) {
         return TypeReference(currentType.name);
       } else if (currentType is ArrayTypeReference) {
@@ -118,7 +131,7 @@ class GraphQLClientFieldConfig {
       } else if (currentType is NotNullReference) {
         currentType = currentType.element;
       } else {
-        return typeReference;
+        return currentType;
       }
     }
 
