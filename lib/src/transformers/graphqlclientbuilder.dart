@@ -9,24 +9,20 @@ class GraphQLClientBuilder {
   TypeReference get jsonType => TypeReference("Map", [TypeReference("String"), TypeReference("Object")]);
   ArgumentDefinition get jsonArgument => ArgumentDefinition(json, jsonType);
 
-  List<ArgumentDefinition> createArgumentsFromField(GraphQLClientFieldConfig fieldConfig, AstTransformerContext context) {
-    return fieldConfig
-        .fields
-        .map((field) => ArgumentDefinition(field.name, field.typeReference))
-        .toList(growable: false);
+  List<ArgumentDefinition> createArgumentsFromField(GraphQLClientFieldConfig fieldConfig) {
+    return fieldConfig.createListFromFields((field) => ArgumentDefinition(field.name, field.typeReference));
   }
 
-  List<Expression> createParametersFromField(GraphQLClientFieldConfig fieldConfig, AstTransformerContext context) {
-    return fieldConfig
-        .fields
-        .map((field) => InvocationExpression(IdentifierExpression("as_value", [field.typeReference]), [jsonIdentifier, PrimitiveExpression(field.name)] ))
-        .toList(growable: false);
-  }
 
-  InvocationExpression createItemMethodInvocationFromField(GraphQLClientFieldConfig fieldConfig, AstTransformerContext context) {
+  InvocationExpression createInstanceFromJson(GraphQLClientFieldConfig fieldConfig) {
     return InvocationExpression(
-        MemberReferenceExpression(ThisReferenceExpression(), fieldConfig.fromJsonMethodName),
-        this.createParametersFromField(fieldConfig, context)
+        MemberReferenceExpression(ThisReferenceExpression(), fieldConfig.fromDataMethodName),
+        fieldConfig.createListFromFields(
+                (field) =>
+                    InvocationExpression(
+                        IdentifierExpression("as_value", [field.typeReference]),
+                        [jsonIdentifier, PrimitiveExpression(field.name)] )
+                    )
     );
   }
 
@@ -50,6 +46,32 @@ class GraphQLClientBuilder {
 
   Expression getValueFromJson(GraphQLClientFieldConfig fieldConfig) {
     return InvocationExpression(IdentifierExpression("as_value", [fieldConfig.typeReference]), [jsonIdentifier, PrimitiveExpression(fieldConfig.name)]);
+  }
+
+  Expression fromJsonValueExpression(GraphQLClientFieldConfig fieldConfig) {
+    if(fieldConfig.hasFields) {
+      return this.createInstanceFromJson(fieldConfig);
+    } else {
+      return this.getValueFromJson(fieldConfig);
+    }
+  }
+
+  createFromJsonMethod(GraphQLClientFieldConfig fieldConfig) {
+    return MethodDefinition(
+        fieldConfig.fromJsonMethodName,
+        ReturnStatement(this.fromJsonValueExpression(fieldConfig)),
+        fieldConfig.typeReference,
+        [this.jsonArgument]
+    );
+  }
+
+  createFromDataMethod(GraphQLClientFieldConfig fieldConfig) {
+    return MethodDefinition(
+        fieldConfig.fromDataMethodName,
+        ReturnStatement(PrimitiveExpression(null)),
+        this.resolveItemTypeReference(fieldConfig.typeReference),
+        this.createArgumentsFromField(fieldConfig)
+    );
   }
 }
 
@@ -76,7 +98,7 @@ class GraphQLClientFieldConfig {
     if(context is GraphQLClientTransformerContext){
       parents = context.fieldPath.map(_normalizePublicName).join();
     }
-    return GraphQLClientFieldConfig("_generate${parents}${_normalizePublicName(field.name)}", field);
+    return GraphQLClientFieldConfig("_get${parents}${_normalizePublicName(field.name)}", field);
   }
 
   static String _normalizePublicName(String name) {
@@ -90,5 +112,10 @@ class GraphQLClientFieldConfig {
   Iterable<FieldDefinition> get fields => field
       .members
       .whereType<FieldDefinition>();
+
+
+  List<ItemType> createListFromFields<ItemType>(ItemType map(FieldDefinition field)) {
+    return this.fields.map(map).toList(growable: false);
+  }
 
 }

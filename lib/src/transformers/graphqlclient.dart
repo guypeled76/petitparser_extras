@@ -33,26 +33,10 @@ class GraphQLClientTransformer extends AstTransformer {
     
     GraphQLClientFieldConfig fieldConfig = GraphQLClientFieldConfig.create(field, context);
 
-    
-    yield MethodDefinition(
-        fieldConfig.fromJsonMethodName,
-        ReturnStatement(
-            fieldConfig.hasFields ?
-    builder.createItemMethodInvocationFromField(fieldConfig, context) :
-                builder.getValueFromJson(fieldConfig)
-
-        ),
-        field.typeReference,
-        [builder.jsonArgument]
-    );
+    yield builder.createFromJsonMethod(fieldConfig);
 
     if(fieldConfig.hasFields) {
-      yield MethodDefinition(
-          fieldConfig.fromDataMethodName,
-          ReturnStatement(PrimitiveExpression(null)),
-          builder.resolveItemTypeReference(field.typeReference),
-          builder.createArgumentsFromField(fieldConfig, context)
-      );
+      yield builder.createFromDataMethod(fieldConfig);
     }
 
     yield* fieldConfig.fields

@@ -56,7 +56,13 @@ class DartPrinter extends PrinterBase<DartPrinterContext> {
 
   @override
   void visitPrimitiveExpression(PrimitiveExpression primitiveNode, DartPrinterContext context) {
-    print_value(primitiveNode.value ?? "null", context);
+    var value = primitiveNode.value;
+
+    if(value is String) {
+      print_value("\"${value}\"", context);
+    } else {
+      print_value(value ?? "null", context);
+    }
   }
 
   @override
@@ -85,7 +91,7 @@ class DartPrinter extends PrinterBase<DartPrinterContext> {
   void visitMethodDefinition(MethodDefinition methodDefinition, DartPrinterContext context) {
     print_items([methodDefinition.typeReference ??"void", " ", methodDefinition.name], context);
     print_list(methodDefinition.arguments, context.ArgumentsStyle, context);
-    print_item(methodDefinition.body, context.MethodBodyStyle, context);
+    print_items([" {\n\t\t", methodDefinition.body, "\n\t}\n"], context);
   }
 
 }
