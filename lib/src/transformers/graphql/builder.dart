@@ -4,13 +4,50 @@ import 'package:petitparser_extras/petitparser_extras.dart';
 
 class GraphQLClientBuilder {
 
-  String get json => "json";
+  final GraphQLClientConfig config;
 
-  IdentifierExpression get jsonIdentifier => IdentifierExpression(json);
+  static final String _jsonName = "json";
 
-  TypeReference get jsonType => TypeReference("Map", [TypeReference("String"), TypeReference("Object")]);
+  static final TypeReference _jsonType = TypeReference("Map", [TypeReference("String"), TypeReference("Object")]);
 
-  ArgumentDefinition get jsonArgument => ArgumentDefinition(json, jsonType);
+  static final IdentifierExpression _jsonIdentifier = IdentifierExpression(_jsonName);
+
+  static final ArgumentDefinition _jsonArgument = ArgumentDefinition(_jsonName, _jsonType);
+
+  GraphQLClientBuilder(this.config);
+
+
+  TypeDefinition createClient(TypeDefinition typeDefinition, AstTransformerContext context) {
+    return TypeDefinition(
+        typeDefinition.name,
+        typeDefinition.baseType,
+        this.createClientMembers(typeDefinition, context)
+    );
+  }
+
+  List<MemberDefinition> createClientMembers(TypeDefinition typeDefinition, AstTransformerContext context) {
+    return this.createClientMembersFromField(this.createDataField(typeDefinition), context).toList(growable: false);
+  }
+
+  Iterable<MemberDefinition> createClientMembersFromField(FieldDefinition field, AstTransformerContext context) sync* {
+    GraphQLClientFieldConfig fieldConfig = GraphQLClientFieldConfig.create(field, context);
+
+    if (fieldConfig.hasFields) {
+
+      if (fieldConfig.isArray) {
+        yield this.createListFromJsonMethod(fieldConfig);
+      }
+
+      yield this.createInstanceFromJsonMethod(fieldConfig, context);
+
+
+      yield this.createFromDataMethod(fieldConfig);
+    }
+
+    yield* fieldConfig
+        .fields
+        .expand((fieldMember) => createClientMembersFromField(fieldMember, GraphQLClientTransformerContext(context, field)));
+  }
 
   List<ArgumentDefinition> createArgumentsFromField(GraphQLClientFieldConfig fieldConfig) {
     return fieldConfig.createListFromFields((field) => ArgumentDefinition(field.name, field.typeReference));
@@ -56,7 +93,7 @@ class GraphQLClientBuilder {
         fieldConfig.instanceFromJsonMethodName,
         ReturnStatement(this.fromJsonValueExpression(fieldConfig, context)),
         fieldConfig.resolveItemTypeReference(),
-        [this.jsonArgument]
+        [_jsonArgument]
     );
   }
 
@@ -68,7 +105,7 @@ class GraphQLClientBuilder {
             IdentifierExpression(fieldConfig.instanceFromJsonMethodName))
         ),
         fieldConfig.typeReference,
-        [this.jsonArgument]
+        [_jsonArgument]
     );
   }
 
@@ -94,7 +131,7 @@ class GraphQLClientBuilder {
   }
 
   Expression getFieldValueFromJson(GraphQLClientFieldConfig fieldConfig) {
-    return IndexerExpression(jsonIdentifier, [PrimitiveExpression(fieldConfig.name)]);
+    return IndexerExpression(_jsonIdentifier, [PrimitiveExpression(fieldConfig.name)]);
   }
 
   MethodDefinition createFromDataMethod(GraphQLClientFieldConfig fieldConfig) {

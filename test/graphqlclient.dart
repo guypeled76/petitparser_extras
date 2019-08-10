@@ -12,7 +12,7 @@ void main() async {
   var schema = await resource.readAsString(encoding: utf8);
 
   test('Test', () {
-    GraphQLClient queryParser = GraphQLClient(schema);
+    GraphQLClient queryParser = GraphQLClient(schema, GraphQLClientConfig());
 
     AstNode compilationUnit = queryParser.parseToAst(""" 
       query test {

@@ -15,32 +15,7 @@ class GraphQLClientTransformer extends AstTransformer {
 
   @override
   AstNode visitTypeDefinition(TypeDefinition typeDefinition, AstTransformerContext context) {
-    return TypeDefinition(
-      typeDefinition.name,
-      typeDefinition.baseType,
-      createClientMembersFromField(builder.createDataField(typeDefinition), context).toList(growable: false)
-    );
-  }
-
-
-  Iterable<MemberDefinition> createClientMembersFromField(FieldDefinition field, AstTransformerContext context) sync* {
-    GraphQLClientFieldConfig fieldConfig = GraphQLClientFieldConfig.create(field, context);
-
-    if (fieldConfig.hasFields) {
-
-      if (fieldConfig.isArray) {
-        yield builder.createListFromJsonMethod(fieldConfig);
-      }
-
-      yield builder.createInstanceFromJsonMethod(fieldConfig, context);
-
-
-      yield builder.createFromDataMethod(fieldConfig);
-    }
-
-    yield* fieldConfig
-        .fields
-        .expand((fieldMember) => createClientMembersFromField(fieldMember, createContext(context, field)));
+    return builder.createClient(typeDefinition, context);
   }
 }
 
@@ -55,6 +30,5 @@ class GraphQLClientTransformerContext extends AstTransformerContext {
   bool get hasFields {
     return this.nodePath.whereType<FieldDefinition>().isNotEmpty;
   }
-
 }
 

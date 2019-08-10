@@ -6,7 +6,7 @@ class GraphQLClient extends GraphQLParser {
 
   final GraphQLClientTransformer _clientTransformer;
 
-  GraphQLClient(String schema) : _clientTransformer = GraphQLClientTransformer(GraphQLClientBuilder()), super(schema);
+  GraphQLClient(String schema, GraphQLClientConfig config) : _clientTransformer = GraphQLClientTransformer(GraphQLClientBuilder(config)), super(schema);
 
   @override
   AstNode parseToAst(String input) {
