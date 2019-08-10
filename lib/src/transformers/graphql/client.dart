@@ -10,7 +10,7 @@ class GraphQLClientTransformer extends AstTransformer {
 
   @override
   AstTransformerContext createContext(AstTransformerContext context, AstNode node) {
-    return GraphQLClientTransformerContext(this, context, node);
+    return GraphQLClientTransformerContext(context, node);
   }
 
   @override
@@ -32,7 +32,7 @@ class GraphQLClientTransformer extends AstTransformer {
         yield builder.createListFromJsonMethod(fieldConfig);
       }
 
-      yield builder.createInstanceFromJsonMethod(fieldConfig);
+      yield builder.createInstanceFromJsonMethod(fieldConfig, context);
 
 
       yield builder.createFromDataMethod(fieldConfig);
@@ -46,9 +46,7 @@ class GraphQLClientTransformer extends AstTransformer {
 
 class GraphQLClientTransformerContext extends AstTransformerContext {
 
-  GraphQLClientTransformer transformer;
-
-  GraphQLClientTransformerContext(this.transformer, AstTransformerContext context, AstNode node) : super(context, node);
+  GraphQLClientTransformerContext(AstTransformerContext context, AstNode node) : super(context, node);
 
   Iterable<String> get fieldPath {
     return this.nodePath.whereType<FieldDefinition>().map((field) => field.name);

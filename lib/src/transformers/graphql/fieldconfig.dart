@@ -14,7 +14,7 @@ class GraphQLClientFieldConfig {
   }
 
   String get instanceFromJsonMethodName {
-    return "${methodName}InstanceFromJson";
+    return "${methodName}FromJson";
   }
 
   String get listFromJsonMethodName {
@@ -22,7 +22,7 @@ class GraphQLClientFieldConfig {
   }
 
   String get instanceFromDataMethodName {
-    return "${methodName}InstanceFromData";
+    return "${methodName}FromData";
   }
 
   String get targetTypeName {
@@ -51,7 +51,9 @@ class GraphQLClientFieldConfig {
     return currentType;
   }
 
-  bool get isArray => typeReference.isArray;
+  bool get isArray {
+    return typeReference.isArray;
+  }
 
   static GraphQLClientFieldConfig create(FieldDefinition field, AstTransformerContext context) {
     var parents = "";
@@ -65,21 +67,22 @@ class GraphQLClientFieldConfig {
     return name[0].toUpperCase() + name.substring(1);
   }
 
-  bool get hasFields =>
-      field.members
-          .whereType<FieldDefinition>()
-          .isNotEmpty;
+  bool get hasFields {
+    return this.fields.isNotEmpty;
+  }
 
-  TypeReference get typeReference => field.typeReference;
+  TypeReference get typeReference {
+    return field.typeReference;
+  }
 
-  Iterable<FieldDefinition> get fields =>
-      field
-          .members
-          .whereType<FieldDefinition>();
+  Iterable<FieldDefinition> get fields {
+    return field.members.whereType<FieldDefinition>();
+  }
 
 
   List<ItemType> createListFromFields<ItemType>(ItemType map(FieldDefinition field)) {
     return this.fields.map(map).toList(growable: false);
   }
+
 
 }

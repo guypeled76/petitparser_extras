@@ -21,36 +21,40 @@ class GraphQLClientBuilder {
   }
 
 
-  InvocationExpression createInstanceFromJson(GraphQLClientFieldConfig fieldConfig) {
+  InvocationExpression createInstanceFromJson(GraphQLClientFieldConfig fieldConfig, AstTransformerContext context) {
     return InvocationExpression(
         MemberReferenceExpression(ThisReferenceExpression(), fieldConfig.instanceFromDataMethodName),
         fieldConfig.createListFromFields(
-                (field) =>
-                InvocationExpression(
-                    IdentifierExpression("as_value", [field.typeReference]),
-                    [jsonIdentifier, PrimitiveExpression(field.name)])
+                (field) => getValueFromJson(GraphQLClientFieldConfig.create(field,  GraphQLClientTransformerContext(context, fieldConfig.field)))
         )
     );
   }
 
 
   Expression getValueFromJson(GraphQLClientFieldConfig fieldConfig) {
-    return InvocationExpression(IdentifierExpression("as_value", [fieldConfig.typeReference]),
-        [jsonIdentifier, PrimitiveExpression(fieldConfig.name)]);
+    if(fieldConfig.hasFields) {
+      if(fieldConfig.isArray) {
+        return InvocationExpression(IdentifierExpression(fieldConfig.listFromJsonMethodName), [getFieldValueFromJson(fieldConfig)]);
+      } else {
+        return InvocationExpression(IdentifierExpression(fieldConfig.instanceFromJsonMethodName), [getFieldValueFromJson(fieldConfig)]);
+      }
+    } else {
+      return getFieldValueFromJsonAndCastTo(fieldConfig, fieldConfig.typeReference);
+    }
   }
 
-  Expression fromJsonValueExpression(GraphQLClientFieldConfig fieldConfig) {
+  Expression fromJsonValueExpression(GraphQLClientFieldConfig fieldConfig, AstTransformerContext context) {
     if (fieldConfig.hasFields) {
-      return this.createInstanceFromJson(fieldConfig);
+      return this.createInstanceFromJson(fieldConfig, context);
     } else {
       return ParenthesisExpression(this.getValueFromJson(fieldConfig));
     }
   }
 
-  createInstanceFromJsonMethod(GraphQLClientFieldConfig fieldConfig) {
+  createInstanceFromJsonMethod(GraphQLClientFieldConfig fieldConfig, AstTransformerContext context) {
     return MethodDefinition(
         fieldConfig.instanceFromJsonMethodName,
-        ReturnStatement(this.fromJsonValueExpression(fieldConfig)),
+        ReturnStatement(this.fromJsonValueExpression(fieldConfig, context)),
         fieldConfig.resolveItemTypeReference(),
         [this.jsonArgument]
     );
