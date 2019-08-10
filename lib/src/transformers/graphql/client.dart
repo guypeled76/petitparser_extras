@@ -42,17 +42,6 @@ class GraphQLClientTransformer extends AstTransformer {
         .fields
         .expand((fieldMember) => createClientMembersFromField(fieldMember, createContext(context, field)));
   }
-
-
-
-
-
-
-
-
-  Iterable<MemberDefinition> getAllMembers(List<MemberDefinition> members, AstTransformerContext context) {
-    return members.expand((member) => <MemberDefinition>[member, ...getAllMembers(member.members, createContext(context, member))]);
-  }
 }
 
 class GraphQLClientTransformerContext extends AstTransformerContext {

@@ -1,5 +1,3 @@
 export 'transformer.dart';
-export 'graphqlclient.dart';
-export 'graphqlsdl.dart';
-export 'graphqlclientbuilder.dart';
+export 'graphql/index.dart';
 
