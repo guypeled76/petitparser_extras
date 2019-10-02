@@ -27,11 +27,23 @@ class GraphQLClientFieldConfig {
 
   String get targetTypeName {
     return this
-        .resolveItemTypeReference()
+        .underliningTypeReference
         .name;
   }
+  
+  TypeReference get underliningTypeReference {
+    return resolveUnderliningTypeReference(typeReference);
+  }
 
-  TypeReference resolveItemTypeReference() {
+  TypeReference get underliningTypeReferenceWithArray {
+    if(this.isArray) {
+      return TypeReference("List",[this.underliningTypeReference]);
+    } else {
+      return underliningTypeReference;
+    }
+  }
+
+  static TypeReference resolveUnderliningTypeReference(TypeReference typeReference) {
     TypeReference currentType = typeReference;
 
     while (currentType != null) {
@@ -43,7 +55,9 @@ class GraphQLClientFieldConfig {
         currentType = currentType.element;
       } else if (currentType is NotNullReference) {
         currentType = currentType.element;
-      } else {
+      } else if (currentType is UnknownTypeReference) {
+        return TypeReference("Object");
+      }  else {
         return currentType;
       }
     }
@@ -58,12 +72,20 @@ class GraphQLClientFieldConfig {
   static GraphQLClientFieldConfig create(FieldDefinition field, AstTransformerContext context) {
     var parents = "";
     if (context is GraphQLClientTransformerContext) {
-      parents = context.fieldPath.map(_normalizePublicName).join();
+      parents = context.fieldPath.map(normalizePublicName).join();
     }
-    return GraphQLClientFieldConfig("_get${parents}${_normalizePublicName(field.name)}", field);
+    return GraphQLClientFieldConfig("_get${parents}${normalizePublicName(field.name)}", field);
   }
 
-  static String _normalizePublicName(String name) {
+  static String normalizePublicName(String name, [String defaultName]) {
+
+    if(name?.isEmpty ?? true) {
+      if(defaultName?.isEmpty ?? true) {
+        return "";
+      } else {
+        name = defaultName;
+      }
+    }
     return name[0].toUpperCase() + name.substring(1);
   }
 

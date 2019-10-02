@@ -42,3 +42,12 @@ class MethodDefinition extends MemberDefinition implements ContainerNode {
     );
   }
 }
+
+class ConstructorDefinition extends MethodDefinition {
+
+  ConstructorDefinition(String name, List<ArgumentDefinition> arguments) : super(name, null, ImplicitTypeReference(), arguments);
+
+  @override
+  bool get isConstructor => true;
+
+}

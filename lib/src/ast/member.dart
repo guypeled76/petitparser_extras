@@ -7,6 +7,8 @@ abstract class MemberDefinition extends Definition {
 
   MemberDefinition(String name) : super(name);
 
+  bool get isConstructor => false;
+
   List<MemberDefinition> get members => const [];
 
 }

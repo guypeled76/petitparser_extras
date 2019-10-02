@@ -50,6 +50,9 @@ class TypeDefinition extends Definition implements ContainerNode, TypeReference 
   bool get isAnonymous => false;
 
   @override
+  bool get isImplicit => false;
+
+  @override
   TypeReference get element => null;
 
   @override
@@ -127,6 +130,8 @@ class TypeReference extends AstNode {
 
   bool get isUnknown => false;
 
+  bool get isImplicit => false;
+
   List<MemberDefinition> get members => const [];
 
   @override
@@ -166,10 +171,34 @@ class TypeReference extends AstNode {
 }
 
 class UnknownTypeReference extends TypeReference {
+
   UnknownTypeReference() : super("?");
 
   @override
   bool get isUnknown => true;
+
+  @override
+  AstNode transform(AstTransformer transformer, AstTransformerContext context) {
+    return this;
+  }
+
+  @override
+  AstNodeScope resolveScope(AstNodeScope current) {
+    return current;
+  }
+
+  @override
+  TypeReference resolveType(AstNodeScope current) {
+    return null;
+  }
+}
+
+class ImplicitTypeReference extends TypeReference {
+
+  ImplicitTypeReference() : super("");
+
+  @override
+  bool get isImplicit => true;
 
   @override
   AstNode transform(AstTransformer transformer, AstTransformerContext context) {

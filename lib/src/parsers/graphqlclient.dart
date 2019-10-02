@@ -6,13 +6,18 @@ class GraphQLClient extends GraphQLParser {
 
   final GraphQLClientTransformer _clientTransformer;
 
-  GraphQLClient(String schema, GraphQLClientConfig config) : _clientTransformer = GraphQLClientTransformer(GraphQLClientBuilder(config)), super(schema);
+  GraphQLClient(GraphQLClientConfig config) : _clientTransformer = GraphQLClientTransformer(GraphQLClientBuilder(config)), super(config.schema);
 
   @override
   AstNode parseToAst(String input) {
     AstNode inputAst = super.parseToAst(input);
-    inputAst = _clientTransformer.transform(inputAst);
+    inputAst = AstTransformer.apply(_clientTransformer, inputAst);
     return inputAst;
+  }
+
+  String queryToDart(String input) {
+    DartPrinter printer = DartPrinter();
+    return printer.print(this.parseToAst(input), true);
   }
 
 }

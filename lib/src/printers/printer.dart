@@ -33,6 +33,8 @@ abstract class PrinterBase<ContextType extends PrintContext> extends AstVisitor<
 
     if(item is AstNode) {
       item.visit(this, context);
+    } else if(item is List) {
+      item.forEach((subItem) => print_item(subItem, style, context));
     } else {
       context._write(item);
     }

@@ -104,7 +104,8 @@ class MarkupPrinter extends PrinterBase<MarkupPrinterContext> {
         objectProperty,
         attributes: {
           "name":objectProperty.name,
-          "value": value
+          "value": value,
+          "type":objectProperty.type
         },
         content: value == null ? [objectProperty.value] : null
     );

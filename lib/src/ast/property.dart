@@ -5,7 +5,9 @@ class ObjectProperty extends NamedNode implements Expression {
 
   final Expression value;
 
-  ObjectProperty(name, this.value) : super(name);
+  final TypeReference type;
+
+  ObjectProperty(name, this.value, [this.type]) : super(name);
 
   @override
   ResultType visit<ResultType, ContextType>(AstVisitor<ResultType, ContextType> visitor, ContextType context) {
@@ -16,8 +18,16 @@ class ObjectProperty extends NamedNode implements Expression {
   @override
   List<AstNode> get children => [this.value];
 
+
   @override
   AstNode transform(AstTransformer transformer, AstTransformerContext context) {
-    return this;
+
+    context = transformer.createContext(context, this);
+    
+    return ObjectProperty(
+      name,
+      transformer.transformNode(this.value, context),
+      transformer.transformNode(this.type ?? UnknownTypeReference(), context)
+    );
   }
 }

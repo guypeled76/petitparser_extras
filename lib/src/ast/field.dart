@@ -10,10 +10,13 @@ class FieldDefinition extends MemberDefinition implements ContainerNode {
 
   final TypeReference typeReference;
 
-  FieldDefinition(String name, this.typeReference, {this.directives = const [], this.arguments = const []}) : super(name);
+  final bool isFinal;
+
+  FieldDefinition(String name, this.typeReference, {this.directives = const [], this.arguments = const [], this.isFinal = false}) : super(name);
 
   @override
   List<AstNode> get children => <AstNode>[typeReference, ...arguments ?? [], ...directives ?? []];
+
 
   @override
   ResultType visit<ResultType, ContextType>(AstVisitor<ResultType, ContextType> visitor, ContextType context) {

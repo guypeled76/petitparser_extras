@@ -171,6 +171,13 @@ class AstTransformer implements AstVisitor<AstNode, AstTransformerContext> {
     return input.transform(this, createContext(null, null));
   }
 
+  static AstNode apply(AstTransformer transformer, AstNode node) {
+    if(node == null) {
+      return null;
+    }
+    return node.visit(transformer, transformer.createContext(null, node));
+  }
+
 }
 
 class AstTransformerContext {

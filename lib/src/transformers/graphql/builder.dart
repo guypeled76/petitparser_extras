@@ -19,18 +19,38 @@ class GraphQLClientBuilder {
 
   TypeDefinition createClient(TypeDefinition typeDefinition, AstTransformerContext context) {
     return TypeDefinition(
-        typeDefinition.name,
+        GraphQLClientFieldConfig.normalizePublicName( typeDefinition.name , config.name) + "Query",
         typeDefinition.baseType,
-        this.createClientMembers(typeDefinition, context)
+        this.createClientMembers(typeDefinition, context).toList(growable: false)
     );
   }
 
-  List<MemberDefinition> createClientMembers(TypeDefinition typeDefinition, AstTransformerContext context) {
-    return this.createClientMembersFromField(this.createDataField(typeDefinition), context).toList(growable: false);
+  Iterable<MemberDefinition> createClientMembers(TypeDefinition typeDefinition, AstTransformerContext context) sync* {
+
+    for(var typeField in typeDefinition.members.whereType<FieldDefinition>()) {
+      yield* createClientExecutionMembers(typeField, context);
+
+      yield* createClientMembersFromField(typeField, typeDefinition, context);
+    }
   }
 
-  Iterable<MemberDefinition> createClientMembersFromField(FieldDefinition field, AstTransformerContext context) sync* {
+  Iterable<MemberDefinition> createClientExecutionMembers(FieldDefinition typeField, AstTransformerContext context) sync* {
+    yield MethodDefinition(
+      "execute",
+      ReturnStatement(PrimitiveExpression(null)),
+      GraphQLClientFieldConfig.resolveUnderliningTypeReference(typeField.typeReference),
+      [...createClientExecutionArguments(typeField.arguments, context)]
+    );
+  }
+
+  Iterable<ArgumentDefinition> createClientExecutionArguments(List<ArgumentDefinition> arguments, AstTransformerContext context) {
+    return arguments.map((argument) => ArgumentDefinition(argument.name, GraphQLClientFieldConfig.resolveUnderliningTypeReference(argument.type)));
+  }
+
+  Iterable<MemberDefinition> createClientMembersFromField(FieldDefinition field, TypeReference owner, AstTransformerContext context) sync* {
     GraphQLClientFieldConfig fieldConfig = GraphQLClientFieldConfig.create(field, context);
+
+    this.registerFieldUsage(fieldConfig, owner, context);
 
     if (fieldConfig.hasFields) {
 
@@ -46,11 +66,11 @@ class GraphQLClientBuilder {
 
     yield* fieldConfig
         .fields
-        .expand((fieldMember) => createClientMembersFromField(fieldMember, GraphQLClientTransformerContext(context, field)));
+        .expand((fieldMember) => createClientMembersFromField(fieldMember, fieldConfig.underliningTypeReference, GraphQLClientTransformerContext(context, field)));
   }
 
   List<ArgumentDefinition> createArgumentsFromField(GraphQLClientFieldConfig fieldConfig) {
-    return fieldConfig.createListFromFields((field) => ArgumentDefinition(field.name, field.typeReference));
+    return fieldConfig.createListFromFields((field) => ArgumentDefinition(field.name, GraphQLClientFieldConfig.resolveUnderliningTypeReference(field.typeReference)));
   }
 
   List<IdentifierExpression> createArgumentReferencesFromField(GraphQLClientFieldConfig fieldConfig) {
@@ -92,7 +112,7 @@ class GraphQLClientBuilder {
     return MethodDefinition(
         fieldConfig.instanceFromJsonMethodName,
         ReturnStatement(this.fromJsonValueExpression(fieldConfig, context)),
-        fieldConfig.resolveItemTypeReference(),
+        fieldConfig.underliningTypeReference,
         [_jsonArgument]
     );
   }
@@ -104,7 +124,7 @@ class GraphQLClientBuilder {
             fieldConfig, 
             IdentifierExpression(fieldConfig.instanceFromJsonMethodName))
         ),
-        fieldConfig.typeReference,
+        fieldConfig.underliningTypeReferenceWithArray,
         [_jsonArgument]
     );
   }
@@ -138,7 +158,7 @@ class GraphQLClientBuilder {
     return MethodDefinition(
         fieldConfig.instanceFromDataMethodName,
         createFromDataMethodReturn(fieldConfig),
-        fieldConfig.resolveItemTypeReference(),
+        fieldConfig.underliningTypeReference,
         createArgumentsFromField(fieldConfig)
     );
   }
@@ -154,15 +174,24 @@ class GraphQLClientBuilder {
     );
   }
 
-  FieldDefinition createDataField(TypeDefinition typeDefinition) {
-    return FieldDefinition(
-        "data",
-        AnonymousTypeReference(
-            TypeReference("Data"),
-            typeDefinition.members
-        )
-    );
+  Iterable<AstNode> generateModel(GraphQLClientTransformerContext context) sync* {
+    if(context == null) {
+      return;
+    }
+
+    yield* context.generateModel();
   }
+
+  void registerFieldUsage(GraphQLClientFieldConfig fieldConfig, TypeReference owner, AstTransformerContext context) {
+    if(context is GraphQLClientTransformerContext) {
+      context.registerField(fieldConfig, owner);
+    }
+  }
+
+  
+
+
+
 
 }
 

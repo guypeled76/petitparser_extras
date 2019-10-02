@@ -17,14 +17,27 @@ class DartPrinter extends PrinterBase<DartPrinterContext> {
   }
 
   @override
+  void visitFieldDefinition(FieldDefinition fieldDefinition, DartPrinterContext context) {
+    print_items([fieldDefinition.isFinal ? "final " : "", fieldDefinition.typeReference, " ", fieldDefinition.name, ";"], context);
+  }
+
+  @override
   void visitTypeDefinition(TypeDefinition typeDefinition, DartPrinterContext context) {
     if(typeDefinition is AnonymousTypeReference) {
       visitTypeReference(typeDefinition.baseType, context);
     } else {
-      print_items(["class ", typeDefinition.name, " extends ", typeDefinition.baseType, " {\n"], context);
+      print_items(["class ", typeDefinition.name, _shouldPrintType(typeDefinition.baseType) ? [" extends ", typeDefinition.baseType] : null, " {\n"], context);
       print_list(typeDefinition.members, context.MembersStyle, context);
       print_items(["}\n"], context);
     }
+  }
+
+  bool _shouldPrintType(TypeReference typeReference) {
+    if(typeReference == null) {
+      return false;
+    }
+
+    return !typeReference.isImplicit;
   }
 
   @override
@@ -83,7 +96,11 @@ class DartPrinter extends PrinterBase<DartPrinterContext> {
 
   @override
   void visitArgumentDefinition(ArgumentDefinition argumentNode, DartPrinterContext context) {
-    print_items([argumentNode.type, " ", argumentNode.name], context);
+    if(argumentNode.isFieldArgument) {
+      print_items(["this.", argumentNode.name], context);
+    } else {
+      print_items([argumentNode.type, " ", argumentNode.name], context);
+    }
   }
 
   @override
@@ -105,9 +122,22 @@ class DartPrinter extends PrinterBase<DartPrinterContext> {
 
   @override
   void visitMethodDefinition(MethodDefinition methodDefinition, DartPrinterContext context) {
-    print_items([methodDefinition.typeReference ??"void", " ", methodDefinition.name], context);
+
+    print_items([methodDefinition.typeReference ?? "void", methodDefinition.isConstructor ? "" : " ", methodDefinition.name], context);
     print_list(methodDefinition.arguments, context.InvocationArgumentsStyle, context);
-    print_items([" {\n\t\t", methodDefinition.body, "\n\t}\n"], context);
+    if(_shouldPrintBody(methodDefinition)) {
+      print_items([" {\n\t\t", methodDefinition.body, "\n\t}\n"], context);
+    } else {
+      print_item(";", null, context);
+    }
+  }
+
+  bool _shouldPrintBody(MethodDefinition methodDefinition) {
+    if(methodDefinition is ConstructorDefinition) {
+      return methodDefinition.body != null;
+    }
+
+    return true;
   }
 
 }

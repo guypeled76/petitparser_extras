@@ -12,14 +12,15 @@ void main() async {
   var schema = await resource.readAsString(encoding: utf8);
 
   test('Test', () {
-    GraphQLClient queryParser = GraphQLClient(schema, GraphQLClientConfig());
+    GraphQLClient queryParser = GraphQLClient(GraphQLClientConfig(schema, 'Test'));
 
     AstNode compilationUnit = queryParser.parseToAst(""" 
-      query test {
+      query searchUsers {
   users(filter: {contains:\$name}) {
     id,
     name, 
     hashtags {
+      id,
       name
     }
   },

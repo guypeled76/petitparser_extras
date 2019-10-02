@@ -13,11 +13,20 @@ class ObjectExpression extends Expression {
   }
 
   @override
+  Iterable<AstNodeScope> generateScopes(AstNodeScope current) sync* {
+    yield* properties?.map((property) => AstNodeScope(current, property)) ?? [];
+  }
+
+  @override
   List<AstNode> get children => this.properties;
 
   @override
   AstNode transform(AstTransformer transformer, AstTransformerContext context) {
-    return this;
+    context = transformer.createContext(context, this);
+
+    return ObjectExpression(
+      transformer.transformNodes(this.properties, context)
+    );
   }
 
 }

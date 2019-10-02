@@ -17,6 +17,11 @@ class ArgumentDefinition extends Definition implements Expression {
   }
 
   @override
+  Iterable<AstNodeScope> generateScopes(AstNodeScope current) sync* {
+    yield* type?.resolveScope(current)?.scopes ?? [];
+  }
+
+  @override
   AstNode transform(AstTransformer transformer, AstTransformerContext context) {
     context = transformer.createContext(context, this);
 
@@ -26,5 +31,14 @@ class ArgumentDefinition extends Definition implements Expression {
         transformer.transformNode(this.value, context)
     );
   }
+  
+  bool get isFieldArgument => false;
 
+}
+
+class FieldArgumentDefinition extends ArgumentDefinition {
+  FieldArgumentDefinition(fieldName) : super(fieldName, ImplicitTypeReference());
+
+  @override
+  bool get isFieldArgument => true;
 }
